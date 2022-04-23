@@ -23,3 +23,13 @@ Expression expression = RunExp.compile("pi ^ 2", true)
 ```java
 float value = RunExp.eval("pi * 0.5");
 ```
+
+# Examples:
+```java
+try:
+  int width = (int)RunExp.eval(widthField.getText());
+  // ...
+catch (ExpCompileException e){
+  invalidInputMessage(e.message);
+}
+```
