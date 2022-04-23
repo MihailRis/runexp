@@ -3,7 +3,7 @@ A lightweight math expressions solver for Java that compiles expressions directl
 
 Also planned to implement runexp-bytecode compilation to use when JVM-bytecode build is not available.
 
-# Usage
+# Usage:
 
 with x:
 ```java
@@ -23,7 +23,8 @@ float value = RunExp.eval("pi * 0.5");
 ```
 
 ### Setting up:
-Add custom constant: `RunExp.addConstant(name, value)`
+- Add custom constant: `RunExp.addConstant(name, value)`
+- RunExp.allowJVM setting - allow compiling expressions directly into JVM bytecode (true by default)
 
 # Features:
 - unary operations: '-'
