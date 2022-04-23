@@ -24,6 +24,22 @@ Expression expression = RunExp.compile("pi ^ 2", true)
 float value = RunExp.eval("pi * 0.5");
 ```
 
+# Features:
+- unary operations: '-'
+- binary operations: '+', '-', '*', '/' and '^' (exponentation)
+- functions:
+  - sin
+  - cos
+  - tan
+  - exp
+  - sqrt
+  - pow (same as '^' operator)
+  - min(a, b)
+  - max(a, b)
+  - sign / signum
+  - rand
+  - smoother (smoother step)
+
 # Examples:
 ```java
 try:
