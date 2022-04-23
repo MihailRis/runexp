@@ -37,8 +37,14 @@ float value = RunExp.eval("pi * 0.5");
   - min(a, b)
   - max(a, b)
   - sign / signum
-  - rand
+  - rand - random number in range `[0.0, 1.0]`
   - smoother (smoother step)
+- constants:
+  - pi (Math.PI)
+  - pi2 (Math.PI * 2)
+  - e (Math.E)
+  - raddeg (180.0 / Math.PI) usage: degrees = radians * raddeg
+  - degrad (Math.PI / 180.0) usage: radians = degreen * degrad
 
 # Examples:
 ```java
