@@ -9,8 +9,6 @@ import java.lang.reflect.Method;
 import static jdk.internal.org.objectweb.asm.Opcodes.*;
 
 public class JvmCompiler {
-    private static final String EXP_MATHS = "mihailris/runexp/ExpMaths";
-
     public static Expression compile(ExpNode root){
         ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
         cw.visit(V1_6,
@@ -26,7 +24,8 @@ public class JvmCompiler {
             mv.visitMethodInsn(INVOKESPECIAL,
                     "java/lang/Object",
                     "<init>",
-                    "()V");
+                    "()V", false);
+
             mv.visitInsn(RETURN);
             mv.visitMaxs(0, 0);
             mv.visitEnd();
@@ -50,37 +49,6 @@ public class JvmCompiler {
         } catch (InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
             return null;
-        }
-    }
-
-    private static String functionClassName(String text){
-        switch (text){
-            case "smoother":
-            case "rand":
-                return EXP_MATHS;
-            default:
-                return "java/lang/Math";
-        }
-    }
-
-    private static String functionClassMethod(String text){
-        switch (text){
-            case "sign":
-                return "signum";
-            default:
-                return text;
-        }
-    }
-
-    private static String functionArgsFormat(String text) {
-        switch (text){
-            case "max":
-            case "min":
-                return "(FF)F";
-            case "pow":
-                return "(DD)D";
-            default:
-                return isDoubleFunc(text) ? "(D)D" : "(F)F";
         }
     }
 
@@ -157,7 +125,8 @@ public class JvmCompiler {
                     mv.visitInsn(F2D);
             }
             String name = node.command.string;
-            mv.visitMethodInsn(INVOKESTATIC, functionClassName(name), functionClassMethod(name), functionArgsFormat(name));
+            RunExpFunction function = RunExp.functions.get(name);
+            mv.visitMethodInsn(INVOKESTATIC, function.className, function.methodName, function.argsFormat, false);
             if (doubleFunc)
                 mv.visitInsn(D2F);
         }

@@ -11,12 +11,17 @@ import static mihailris.runexp.ExpConstants.ERR_EMPTY_EXPRESSION;
  * - add functions (expressions with multiple input values)
  */
 public class RunExp {
+    public static final String VERSION_STRING = "1.0";
     public static final int VERSION = 1;
     public static boolean verbose;
     public static boolean allowJVM = true;
     private static final Tokenizer tokenizer = new Tokenizer();
     static Map<String, Float> constants = new HashMap<>();
+    static Map<String, RunExpFunction> functions = new HashMap<>();
     static Set<String> xAliases = new HashSet<>();
+
+    private static final String MATH = "java/lang/Math";
+    private static final String EXP_MATHS = "mihailris/runexp/ExpMaths";
 
     static {
         for (char c = 'a'; c <= 'z'; c++) {
@@ -27,6 +32,22 @@ public class RunExp {
         constants.put("pi2", (float) (Math.PI * 2));
         constants.put("raddeg", (float) (180.0/Math.PI));
         constants.put("degrad", (float) (Math.PI/180.0));
+
+        functions.put("sin", new RunExpFunction("sin", 1, MATH, "sin", true));
+        functions.put("cos", new RunExpFunction("cos", 1, MATH, "cos", true));
+        functions.put("tan", new RunExpFunction("tan", 1, MATH, "tan", true));
+        functions.put("exp", new RunExpFunction("exp", 1, MATH, "exp", true));
+        functions.put("sqrt", new RunExpFunction("sqrt", 1, MATH, "sqrt", true));
+        functions.put("pow", new RunExpFunction("pow", 2, MATH, "pow", true));
+
+        functions.put("sign", new RunExpFunction("sign", 1, MATH, "signum", false));
+        functions.put("signum", new RunExpFunction("sign", 1, MATH, "signum", false));
+
+        functions.put("min", new RunExpFunction("min", 2, MATH, "min", false));
+        functions.put("max", new RunExpFunction("max", 2, MATH, "max", false));
+
+        functions.put("rand", new RunExpFunction("rand", 1, EXP_MATHS, "rand", false));
+        functions.put("smoother", new RunExpFunction("smoother", 1, EXP_MATHS, "smoother", false));
     }
 
     public static void addConstant(String name, float value){
