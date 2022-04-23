@@ -8,8 +8,7 @@ import static runexp.ExpConstants.ERR_EMPTY_EXPRESSION;
  * Created by MihailRis 10th April 2021
  * TODO:
  * - add double support
- * - multiple variables
- * - close undefined behaviour on incorrect use with throwing exceptions
+ * - add functions (expressions with multiple input values)
  */
 public class RunExp {
     public static final int VERSION = 1;
