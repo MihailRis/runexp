@@ -1,4 +1,4 @@
-package runexp;
+package mihailris.runexp;
 
 import java.util.Scanner;
 

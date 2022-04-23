@@ -1,4 +1,4 @@
-package runexp;
+package mihailris.runexp;
 
 public class ExpConstants {
     public static final int ERR_INVALID_IDENTIFIER = 1;

@@ -1,9 +1,7 @@
-package runexp;
+package mihailris.runexp;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static runexp.ExpConstants.BINARY_OPERATORS;
 
 public class ExpNode {
     Token command;
@@ -47,7 +45,7 @@ public class ExpNode {
         } else {
             StringBuilder text = new StringBuilder();
             if (command != null){
-                if (BINARY_OPERATORS.contains(command.text)){
+                if (ExpConstants.BINARY_OPERATORS.contains(command.text)){
                     text.append(nodes.get(0).toStringExpression());
                     text.append(' ').append(command.text).append(' ');
                     text.append(nodes.get(1).toStringExpression());

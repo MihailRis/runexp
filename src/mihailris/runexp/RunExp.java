@@ -1,8 +1,8 @@
-package runexp;
+package mihailris.runexp;
 
 import java.util.*;
 
-import static runexp.ExpConstants.ERR_EMPTY_EXPRESSION;
+import static mihailris.runexp.ExpConstants.ERR_EMPTY_EXPRESSION;
 
 /**
  * Created by MihailRis 10th April 2021

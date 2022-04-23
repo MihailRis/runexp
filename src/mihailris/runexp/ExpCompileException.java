@@ -1,4 +1,4 @@
-package runexp;
+package mihailris.runexp;
 
 public class ExpCompileException extends Exception {
     public final int pos;

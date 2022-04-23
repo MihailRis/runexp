@@ -1,9 +1,9 @@
-package runexp;
+package mihailris.runexp;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static runexp.ExpConstants.*;
+import static mihailris.runexp.ExpConstants.*;
 
 public class Parser {
     public static ExpNode parse(List<Token> tokens, boolean constant) throws ExpCompileException {

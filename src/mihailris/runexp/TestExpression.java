@@ -1,4 +1,4 @@
-package runexp;
+package mihailris.runexp;
 
 class TestExpression implements Expression {
     @Override

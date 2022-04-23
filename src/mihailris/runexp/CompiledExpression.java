@@ -1,4 +1,4 @@
-package runexp;
+package mihailris.runexp;
 
 public class CompiledExpression implements Expression {
     final byte[] bytecode;

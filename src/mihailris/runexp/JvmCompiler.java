@@ -1,4 +1,4 @@
-package runexp;
+package mihailris.runexp;
 
 import jdk.internal.org.objectweb.asm.ClassWriter;
 import jdk.internal.org.objectweb.asm.MethodVisitor;
@@ -9,7 +9,7 @@ import java.lang.reflect.Method;
 import static jdk.internal.org.objectweb.asm.Opcodes.*;
 
 public class JvmCompiler {
-    private static final String EXP_MATHS = "runexp/ExpMaths";
+    private static final String EXP_MATHS = "mihailris/runexp/ExpMaths";
 
     public static Expression compile(ExpNode root){
         ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);

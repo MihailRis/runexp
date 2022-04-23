@@ -1,4 +1,4 @@
-package runexp;
+package mihailris.runexp;
 
 public class RunexpTest {
     public static void main(String[] args) throws ExpCompileException {
