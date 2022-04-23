@@ -23,8 +23,8 @@ float value = RunExp.eval("pi * 0.5");
 ```
 
 ### Setting up:
-Add custom constant: `RunExp.addConstant(name, value)`
-RunExp.allowJVM setting - allow compiling expressions directly into JVM bytecode (true by default)
+- Add custom constant: `RunExp.addConstant(name, value)`
+- RunExp.allowJVM setting - allow compiling expressions directly into JVM bytecode (true by default)
 
 # Features:
 - unary operations: '-'
