@@ -6,7 +6,7 @@ import java.util.List;
 import static mihailris.runexp.ExpConstants.*;
 
 public class Parser {
-    private static final String[] binary_ops_groups = new String[]{
+    private static final String[] BINARY_OPS_GROUPS = new String[]{
         "^",
         "*/%",
         "+-",
@@ -36,9 +36,6 @@ public class Parser {
         parseBlocks(nodes, newNodes, 0, false);
         nodes = newNodes;
 
-        if (RunExp.verbose)
-            System.out.println("Parser.parse BLOCKS "+RunExp.ast2Str(nodes, 0));
-
         newNodes = new ArrayList<>();
         parseCalls(nodes, newNodes);
         nodes = newNodes;
@@ -51,7 +48,7 @@ public class Parser {
         parseUnary(nodes, newNodes);
         nodes = newNodes;
 
-        for (String group : binary_ops_groups) {
+        for (String group : BINARY_OPS_GROUPS) {
             newNodes = new ArrayList<>();
             parseBinary(nodes, newNodes, group);
             nodes = newNodes;
@@ -65,7 +62,8 @@ public class Parser {
             nodes = newNodes;
             iterations++;
         }
-        System.out.println("runexp: simplified in "+iterations+" iterations");
+        if (RunExp.verbose)
+            System.out.println("runexp: simplified in "+iterations+" iterations");
         return new ExpNode(nodes);
     }
 
