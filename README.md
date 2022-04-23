@@ -3,7 +3,7 @@ A lightweight math expressions solver for Java that compiles expressions directl
 
 Also planned to implement runexp-bytecode compilation to use when JVM-bytecode build is not available.
 
-# Usage
+# Usage:
 
 with x:
 ```java
