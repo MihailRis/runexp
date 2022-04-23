@@ -6,6 +6,12 @@ import java.util.List;
 import static mihailris.runexp.ExpConstants.*;
 
 public class Parser {
+    private static final String[] binary_ops_groups = new String[]{
+        "^",
+        "*/%",
+        "+-",
+    };
+
     public static ExpNode parse(List<Token> tokens, boolean constant) throws ExpCompileException {
         List<ExpNode> nodes = new ArrayList<>();
         for (int i = 0; i < tokens.size(); i++){
@@ -37,9 +43,6 @@ public class Parser {
         parseCalls(nodes, newNodes);
         nodes = newNodes;
 
-        if (RunExp.verbose)
-            System.out.println("Parser.parse CALLS "+RunExp.ast2Str(nodes, 0));
-
         newNodes = new ArrayList<>();
         parseArguments(nodes, newNodes, false);
         nodes = newNodes;
@@ -48,12 +51,7 @@ public class Parser {
         parseUnary(nodes, newNodes);
         nodes = newNodes;
 
-        String[] groups = new String[]{
-            "^",
-            "*/%",
-            "+-",
-        };
-        for (String group : groups) {
+        for (String group : binary_ops_groups) {
             newNodes = new ArrayList<>();
             parseBinary(nodes, newNodes, group);
             nodes = newNodes;
