@@ -14,12 +14,22 @@ public class RunExp {
     public static final int VERSION = 1;
     public static boolean verbose;
     private static final Tokenizer tokenizer = new Tokenizer();
+    static Map<String, Float> constants = new HashMap<>();
     static Set<String> xAliases = new HashSet<>();
 
     static {
         for (char c = 'a'; c <= 'z'; c++) {
             xAliases.add(String.valueOf(c));
         }
+        constants.put("e", (float) Math.E);
+        constants.put("pi", (float) Math.PI);
+        constants.put("pi2", (float) (Math.PI * 2));
+        constants.put("raddeg", (float) (180.0/Math.PI));
+        constants.put("degrad", (float) (Math.PI/180.0));
+    }
+
+    public static void addConstant(String name, float value){
+        constants.put(name, value);
     }
 
     public static void addXAlias(String alias){

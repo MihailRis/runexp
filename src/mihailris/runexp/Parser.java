@@ -11,22 +11,9 @@ public class Parser {
         for (int i = 0; i < tokens.size(); i++){
             Token token = tokens.get(i);
             if (token.tag == Token.Tag.NAME){
-                switch (token.text){
-                    case "e":
-                        token = new Token(Token.Tag.NUMBER, String.valueOf(Math.E), token.pos);
-                        break;
-                    case "pi":
-                        token = new Token(Token.Tag.NUMBER, String.valueOf(Math.PI), token.pos);
-                        break;
-                    case "pi2":
-                        token = new Token(Token.Tag.NUMBER, String.valueOf(Math.PI*2.0), token.pos);
-                        break;
-                    case "raddeg":
-                        token = new Token(Token.Tag.NUMBER, String.valueOf(180.0/Math.PI), token.pos);
-                        break;
-                    case "degrad":
-                        token = new Token(Token.Tag.NUMBER, String.valueOf(Math.PI/180.0), token.pos);
-                        break;
+                Float constantValue = RunExp.constants.get(token.text);
+                if (constantValue != null){
+                    token = new Token(Token.Tag.NUMBER, constantValue.toString(), token.pos);
                 }
                 // if token is still name
                 if (token.tag == Token.Tag.NAME && !(i < tokens.size()-1 && tokens.get(i+1).tag == Token.Tag.OPEN)) {
