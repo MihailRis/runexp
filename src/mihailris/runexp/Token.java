@@ -1,28 +1,35 @@
 package mihailris.runexp;
 
-class Token {
+public class Token {
     Tag tag;
-    String text;
+    float value;
+    String string;
     int pos;
 
-    Token(Tag tag, String text, int pos){
+    public Token(Tag tag, String string, int pos) {
         this.tag = tag;
-        this.text = text;
+        this.string = string;
         this.pos = pos;
     }
 
-    @Override
-    public String toString(){
-        return "<"+tag+":"+text+">";
+    public Token(Tag tag, float value, int pos) {
+        this.tag = tag;
+        this.value = value;
+        this.pos = pos;
+    }
+
+    public Token(Tag tag, int pos) {
+        this.tag = tag;
+        this.pos = pos;
     }
 
     public enum Tag {
-        UNDEFINED,
-        NUMBER,
+        VALUE,
+        VARIABLE,
+        OPERATOR,
+        FUNCTION,
         OPEN,
         CLOSE,
-        NAME,
-        OPERATOR,
-        SEPARATOR,
+        SEPARATOR
     }
 }

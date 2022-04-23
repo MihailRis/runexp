@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Tokenizer {
-    private List<Token> tokens;
-    private Token.Tag tag;
+    private List<RawToken> tokens;
+    private RawToken.Tag tag;
     private StringBuilder builder;
     private int lpos;
 
-    public List<Token> perform(String code) throws ExpCompileException {
+    public List<RawToken> perform(String code) throws ExpCompileException {
         tokens = new ArrayList<>();
-        tag = Token.Tag.UNDEFINED;
+        tag = RawToken.Tag.UNDEFINED;
         final int length = code.length();
         int pos = 0;
         lpos = 0;
@@ -24,25 +24,25 @@ public class Tokenizer {
             }
             if (c == ','){
                 flush();
-                tag = Token.Tag.SEPARATOR;
+                tag = RawToken.Tag.SEPARATOR;
                 put(c);
                 flush();
             }
             if (c == '('){
                 flush();
-                tag = Token.Tag.OPEN;
+                tag = RawToken.Tag.OPEN;
                 put(c);
                 flush();
             }
             if (c == ')'){
                 flush();
-                tag = Token.Tag.CLOSE;
+                tag = RawToken.Tag.CLOSE;
                 put(c);
                 flush();
             }
             if (c == '+' || c == '-' || c == '*' || c == '/' || c == '^' || c == '%'){
                 flush();
-                tag = Token.Tag.OPERATOR;
+                tag = RawToken.Tag.OPERATOR;
                 put(c);
                 flush();
             }
@@ -50,10 +50,10 @@ public class Tokenizer {
             switch (tag){
                 case UNDEFINED: {
                     if (Character.isAlphabetic(c)){
-                        tag = Token.Tag.NAME;
+                        tag = RawToken.Tag.NAME;
                         put(c);
                     } else if (Character.isDigit(c)){
-                        tag = Token.Tag.NUMBER;
+                        tag = RawToken.Tag.NUMBER;
                         put(c);
                     }
                     break;
@@ -83,7 +83,7 @@ public class Tokenizer {
     private void flush() throws ExpCompileException {
         if (builder != null){
             String text = builder.toString();
-            if (tag == Token.Tag.NUMBER) {
+            if (tag == RawToken.Tag.NUMBER) {
                 text = text.replaceAll("_", "");
                 try {
                     Double.parseDouble(text);
@@ -91,11 +91,11 @@ public class Tokenizer {
                     throw new ExpCompileException(text, lpos, ExpConstants.ERR_INVALID_NUMBER);
                 }
             }
-            Token token = new Token(tag, text, lpos);
+            RawToken token = new RawToken(tag, text, lpos);
             tokens.add(token);
             builder = null;
         }
-        tag = Token.Tag.UNDEFINED;
+        tag = RawToken.Tag.UNDEFINED;
     }
 
     private void putEmpty(){

@@ -41,17 +41,19 @@ public class ExpNode {
 
     public String toStringExpression(){
         if (token != null){
-            return token.text;
+            if (token.tag == Token.Tag.VALUE)
+                return String.valueOf(token.value);
+            throw new IllegalStateException();
         } else {
             StringBuilder text = new StringBuilder();
             if (command != null){
-                if (ExpConstants.BINARY_OPERATORS.contains(command.text)){
+                if (command.tag == Token.Tag.OPERATOR){
                     text.append(nodes.get(0).toStringExpression());
-                    text.append(' ').append(command.text).append(' ');
+                    text.append(' ').append(command.value).append(' ');
                     text.append(nodes.get(1).toStringExpression());
                     return text.toString();
-                } else {
-                    text.append(command.text);
+                } else if (command.tag == Token.Tag.FUNCTION){
+                    text.append(command.string);
                 }
             }
             text.append('(');

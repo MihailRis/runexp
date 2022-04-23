@@ -12,26 +12,56 @@ public class Parser {
         "+-",
     };
 
-    public static ExpNode parse(List<Token> tokens, boolean constant) throws ExpCompileException {
+    public static List<ExpNode> performRawTokens(List<RawToken> tokens, boolean constant) throws ExpCompileException {
         List<ExpNode> nodes = new ArrayList<>();
         for (int i = 0; i < tokens.size(); i++){
-            Token token = tokens.get(i);
-            if (token.tag == Token.Tag.NAME){
-                Float constantValue = RunExp.constants.get(token.text);
-                if (constantValue != null){
-                    token = new Token(Token.Tag.NUMBER, constantValue.toString(), token.pos);
-                }
-                // if token is still name
-                if (token.tag == Token.Tag.NAME && !(i < tokens.size()-1 && tokens.get(i+1).tag == Token.Tag.OPEN)) {
-                    if (constant) {
-                        throw new ExpCompileException("unknown constant '" + token.text + "'", token.pos, ERR_UNKNOWN_CONSTANT);
-                    } else if (!RunExp.xAliases.contains(token.text)) {
-                        throw new ExpCompileException("unknown name '" + token.text + "'", token.pos, ERR_UNKNOWN_NAME);
+            RawToken rawToken = tokens.get(i);
+
+            Token token;
+            switch (rawToken.tag){
+                case NAME:{
+                    if (i < tokens.size()-1 && tokens.get(i+1).tag == RawToken.Tag.OPEN){
+                        token = new Token(Token.Tag.FUNCTION, rawToken.text, rawToken.pos);
+                    } else {
+                        Float constantValue = RunExp.constants.get(rawToken.text);
+                        if (constantValue != null) {
+                            token = new Token(Token.Tag.VALUE, constantValue, rawToken.pos);
+                        } else {
+                            if (constant) {
+                                throw new ExpCompileException("unknown constant '" + rawToken.text + "'",
+                                        rawToken.pos, ERR_UNKNOWN_CONSTANT);
+                            }
+                            if (!RunExp.xAliases.contains(rawToken.text)) {
+                                throw new ExpCompileException("unknown name '" + rawToken.text + "'",
+                                        rawToken.pos, ERR_UNKNOWN_NAME);
+                            }
+                            token = new Token(Token.Tag.VARIABLE, rawToken.text, rawToken.pos);
+                        }
                     }
+                    break;
                 }
+                case NUMBER: {
+                    token = new Token(Token.Tag.VALUE, Float.parseFloat(rawToken.text), rawToken.pos);
+                    break;
+                }
+                case OPERATOR: {
+                    token = new Token(Token.Tag.OPERATOR, rawToken.text, rawToken.pos);
+                    break;
+                }
+                case OPEN: token = new Token(Token.Tag.OPEN, rawToken.pos); break;
+                case CLOSE: token = new Token(Token.Tag.CLOSE, rawToken.pos); break;
+                case SEPARATOR: token = new Token(Token.Tag.SEPARATOR, rawToken.pos); break;
+                default:
+                    throw new IllegalStateException();
             }
             nodes.add(new ExpNode(token));
         }
+        return nodes;
+    }
+
+    public static ExpNode parse(List<RawToken> tokens, boolean constant) throws ExpCompileException {
+        List<ExpNode> nodes = performRawTokens(tokens, constant);
+
         List<ExpNode> newNodes = new ArrayList<>();
         parseBlocks(nodes, newNodes, 0, false);
         nodes = newNodes;
@@ -94,7 +124,7 @@ public class Parser {
         for (ExpNode expNode : source) {
             prev = node;
             node = expNode;
-            if (prev != null && prev.token != null && prev.token.tag == Token.Tag.NAME && node.token == null) {
+            if (prev != null && prev.token != null && prev.token.tag == Token.Tag.FUNCTION && node.token == null) {
                 nodes.remove(prev);
                 List<ExpNode> out = new ArrayList<>();
                 parseCalls(node.nodes, out);
@@ -175,7 +205,7 @@ public class Parser {
                 parseBinary(node.nodes, out, group);
                 nodes.add(new ExpNode(node.command, out));
                 continue;
-            } else if (node.token.tag == Token.Tag.OPERATOR && group.contains(node.token.text)){
+            } else if (node.token.tag == Token.Tag.OPERATOR && group.contains(node.token.string)){
                 ExpNode prev = nodes.get(nodes.size()-1);
                 ExpNode next = source.get(index+1);
                 if (next.token == null){
@@ -195,15 +225,29 @@ public class Parser {
         }
     }
 
+    private static float performOperation(float a, float b, String op){
+        switch (op) {
+            case "*": return a * b;
+            case "^": return  (float) Math.pow(a, b);
+            case "/": return a / b;
+            case "%": return a % b;
+            case "+": return a + b;
+            case "-": return a - b;
+            default:
+                throw new IllegalStateException();
+        }
+    }
+
     private static boolean simplify(List<ExpNode> source, List<ExpNode> nodes){
         boolean changed = false;
         for (ExpNode node : source) {
             if (node.command != null && node.command.tag == Token.Tag.OPERATOR) {
+                // unary operators
                 if (node.nodes.size() == 1) {
                     ExpNode subnode = node.get(0);
-                    if (subnode.token != null && subnode.token.tag == Token.Tag.NUMBER) {
-                        if (!node.command.text.equals("+")) {
-                            subnode.token.text = node.command.text + subnode.token.text;
+                    if (subnode.token != null && subnode.token.tag == Token.Tag.VALUE) {
+                        if (node.command.string.equals("-")) {
+                            subnode.token.value *= -1;
                             nodes.add(subnode);
                             changed = true;
                             continue;
@@ -216,42 +260,17 @@ public class Parser {
                         changed = true;
                         continue;
                     }
+                // binary operators
                 } else if (node.nodes.size() > 1) {
                     ExpNode a = node.get(0);
                     ExpNode b = node.get(1);
-                    if (a.token != null && a.token.tag == Token.Tag.NUMBER) {
-                        if (b.token != null && b.token.tag == Token.Tag.NUMBER) {
+                    if (a.token != null && a.token.tag == Token.Tag.VALUE) {
+                        if (b.token != null && b.token.tag == Token.Tag.VALUE) {
                             Token simplified;
-                            double valA = Double.parseDouble(a.token.text);
-                            double valB = Double.parseDouble(b.token.text);
-                            switch (node.command.text) {
-                                case "*":
-                                    simplified = new Token(Token.Tag.NUMBER,
-                                            String.valueOf(valA * valB), a.token.pos);
-                                    break;
-                                case "^":
-                                    simplified = new Token(Token.Tag.NUMBER,
-                                            String.valueOf(Math.pow(valA, valB)), a.token.pos);
-                                    break;
-                                case "/":
-                                    simplified = new Token(Token.Tag.NUMBER,
-                                            String.valueOf(valA / valB), a.token.pos);
-                                    break;
-                                case "+":
-                                    simplified = new Token(Token.Tag.NUMBER,
-                                            String.valueOf(valA + valB), a.token.pos);
-                                    break;
-                                case "-":
-                                    simplified = new Token(Token.Tag.NUMBER,
-                                            String.valueOf(valA - valB), a.token.pos);
-                                    break;
-                                case "%":
-                                    simplified = new Token(Token.Tag.NUMBER,
-                                            String.valueOf(valA % valB), a.token.pos);
-                                    break;
-                                default:
-                                    throw new IllegalStateException();
-                            }
+                            float valA = a.token.value;
+                            float valB = b.token.value;
+                            float result = performOperation(valA, valB, node.command.string);
+                            simplified = new Token(Token.Tag.VALUE, result, node.command.pos);
                             nodes.add(new ExpNode(simplified));
                             changed = true;
                             continue;
@@ -262,6 +281,7 @@ public class Parser {
                     continue;
                 }
             }
+            // unpacking unnecessary blocks
             if (node.token == null) {
                 List<ExpNode> out = new ArrayList<>();
                 for (ExpNode subnode : node.nodes) {

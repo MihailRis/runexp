@@ -46,7 +46,7 @@ public class RunExp {
     }
 
     public static Expression compile(String code, boolean constant) throws ExpCompileException {
-        List<Token> tokens = tokenizer.perform(code);
+        List<RawToken> tokens = tokenizer.perform(code);
         ExpNode root = Parser.parse(tokens, constant);
         if (root.nodes.isEmpty()){
             throw new ExpCompileException("empty expression", 0, ERR_EMPTY_EXPRESSION);

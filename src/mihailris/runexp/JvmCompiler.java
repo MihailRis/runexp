@@ -111,13 +111,13 @@ public class JvmCompiler {
     }
 
     private static void compile(ExpNode node, MethodVisitor mv) {
-        if (node.token != null && node.token.tag == Token.Tag.NUMBER){
-            mv.visitLdcInsn((float)Double.parseDouble(node.token.text));
+        if (node.token != null && node.token.tag == Token.Tag.VALUE){
+            mv.visitLdcInsn(node.token.value);
             return;
         }
-        if (node.command != null && node.command.text.equals(ExpConstants.POW_OP)){
-            node.command.text = "pow";
-            node.command.tag = Token.Tag.NAME;
+        if (node.command != null && node.command.string.equals(ExpConstants.POW_OP)){
+            node.command.string = "pow";
+            node.command.tag = Token.Tag.FUNCTION;
         }
         if (node.command != null && node.command.tag == Token.Tag.OPERATOR){
             if (node.nodes.size() == 1){
@@ -127,40 +127,41 @@ public class JvmCompiler {
                 ExpNode a = node.get(0);
                 ExpNode b = node.get(1);
 
-                boolean constA = (a.token != null && a.token.tag == Token.Tag.NUMBER);
-                boolean constB = (b.token != null && b.token.tag == Token.Tag.NUMBER);
+                boolean constA = (a.token != null && a.token.tag == Token.Tag.VALUE);
+                boolean constB = (b.token != null && b.token.tag == Token.Tag.VALUE);
 
                 assert (!constA || !constB);
 
                 if (constA){
-                    mv.visitLdcInsn((float)Double.parseDouble(a.token.text));
+                    mv.visitLdcInsn(a.token.value);
                 } else {
                     compile(a, mv);
                 }
 
                 if (constB){
-                    mv.visitLdcInsn((float)Double.parseDouble(b.token.text));
+                    mv.visitLdcInsn(b.token.value);
                 } else {
                     compile(b, mv);
                 }
 
-                int opcode = binaryOp(node.command.text);
+                int opcode = binaryOp(node.command.string);
                 mv.visitInsn(opcode);
             }
             return;
         }
-        if (node.command != null && node.command.tag == Token.Tag.NAME){
-            boolean doubleFunc = isDoubleFunc(node.command.text);
+        if (node.command != null && node.command.tag == Token.Tag.FUNCTION){
+            boolean doubleFunc = isDoubleFunc(node.command.string);
             for (ExpNode subnode : node.nodes){
                 compile(subnode, mv);
                 if (doubleFunc)
                     mv.visitInsn(F2D);
             }
-            mv.visitMethodInsn(INVOKESTATIC, functionClassName(node.command.text), functionClassMethod(node.command.text), functionArgsFormat(node.command.text));
+            String name = node.command.string;
+            mv.visitMethodInsn(INVOKESTATIC, functionClassName(name), functionClassMethod(name), functionArgsFormat(name));
             if (doubleFunc)
                 mv.visitInsn(D2F);
         }
-        if (node.token != null && node.token.tag == Token.Tag.NAME){
+        if (node.token != null && node.token.tag == Token.Tag.VARIABLE){
             mv.visitVarInsn(FLOAD, 1);
             return;
         }
