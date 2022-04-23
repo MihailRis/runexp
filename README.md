@@ -5,8 +5,6 @@ Also planned to implement runexp-bytecode compilation to use when JVM-bytecode b
 
 # Usage
 
-### Regular way:
-
 with x:
 ```java
 Expression expression = RunExp.compile("sin(x) * 0.5 + (x * 0.1)")
@@ -23,6 +21,9 @@ Expression expression = RunExp.compile("pi ^ 2", true)
 ```java
 float value = RunExp.eval("pi * 0.5");
 ```
+
+### Setting up:
+Add custom constant: `RunExp.addConstant(name, value)`
 
 # Features:
 - unary operations: '-'
