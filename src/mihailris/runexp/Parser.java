@@ -12,6 +12,9 @@ public class Parser {
             Token token = tokens.get(i);
             if (token.tag == Token.Tag.NAME){
                 switch (token.text){
+                    case "e":
+                        token = new Token(Token.Tag.NUMBER, String.valueOf(Math.E), token.pos);
+                        break;
                     case "pi":
                         token = new Token(Token.Tag.NUMBER, String.valueOf(Math.PI), token.pos);
                         break;
