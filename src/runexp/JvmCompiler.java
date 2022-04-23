@@ -123,7 +123,6 @@ public class JvmCompiler {
             if (node.nodes.size() == 1){
                 compile(node.get(0), mv);
                 mv.visitInsn(FNEG); // TODO: other unaries theoritically support
-                //builder.append(ExpConstants.unaryOp(node.command.text));
             } else {
                 ExpNode a = node.get(0);
                 ExpNode b = node.get(1);
