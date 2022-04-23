@@ -13,6 +13,7 @@ import static mihailris.runexp.ExpConstants.ERR_EMPTY_EXPRESSION;
 public class RunExp {
     public static final int VERSION = 1;
     public static boolean verbose;
+    public static boolean allowJVM = true;
     private static final Tokenizer tokenizer = new Tokenizer();
     static Map<String, Float> constants = new HashMap<>();
     static Set<String> xAliases = new HashSet<>();
@@ -50,22 +51,21 @@ public class RunExp {
         if (root.nodes.isEmpty()){
             throw new ExpCompileException("empty expression", 0, ERR_EMPTY_EXPRESSION);
         }
-        System.out.println("simplified: "+root.toStringExpression());
-        if (RunExp.verbose)
+        if (RunExp.verbose) {
+            System.out.println("simplified: "+root.toStringExpression());
             System.out.println(ast2Str(root.nodes, 0));
-        Expression expression;
-        try {
-            expression = JvmCompiler.compile(root.get(0));
-        } catch (Exception e){
-            System.err.println("could not to compile expression into java bytecode");
-            e.printStackTrace();
-
-            expression = Compiler.compile(root.get(0));
-
-            if (verbose)
-                System.out.println("RunExp.compile "+ Arrays.toString(((CompiledExpression)expression).bytecode));
         }
-        return expression;
+
+        if (allowJVM) {
+            try {
+                return JvmCompiler.compile(root.get(0));
+            } catch (Exception e) {
+                System.err.println("could not to compile expression into java bytecode");
+                e.printStackTrace();
+            }
+        }
+
+        return Compiler.compile(root.get(0));
     }
 
     static String ast2Str(List<ExpNode> nodes, int indent){
