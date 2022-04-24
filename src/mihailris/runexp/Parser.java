@@ -266,11 +266,8 @@ public class Parser {
                     ExpNode b = node.get(1);
                     if (a.token != null && a.token.tag == Token.Tag.VALUE) {
                         if (b.token != null && b.token.tag == Token.Tag.VALUE) {
-                            Token simplified;
-                            float valA = a.token.value;
-                            float valB = b.token.value;
-                            float result = performOperation(valA, valB, node.command.string);
-                            simplified = new Token(Token.Tag.VALUE, result, node.command.pos);
+                            float result = performOperation(a.token.value, b.token.value, node.command.string);
+                            Token simplified = new Token(Token.Tag.VALUE, result, node.command.pos);
                             nodes.add(new ExpNode(simplified));
                             changed = true;
                             continue;
