@@ -42,27 +42,13 @@ public class JvmCompiler {
         byte[] raw = cw.toByteArray();
         try {
             return (Expression) new ClassLoader(Expression.class.getClassLoader()) {
-                public Class defineClass(byte[] bytes) {
+                public Class<?> defineClass(byte[] bytes) {
                     return super.defineClass("ExpressionN"+cw.hashCode(), bytes, 0, bytes.length);
                 }
             }.defineClass(raw).newInstance();
         } catch (InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
             return null;
-        }
-    }
-
-    private static boolean isDoubleFunc(String text) {
-        switch (text){
-            case "sin":
-            case "cos":
-            case "tan":
-            case "exp":
-            case "sqrt":
-            case "pow":
-                return true;
-            default:
-                return false;
         }
     }
 
@@ -118,14 +104,16 @@ public class JvmCompiler {
             return;
         }
         if (node.command != null && node.command.tag == Token.Tag.FUNCTION){
-            boolean doubleFunc = isDoubleFunc(node.command.string);
+            String name = node.command.string;
+            RunExpFunction function = RunExp.functions.get(name);
+
+            boolean doubleFunc = function.isDouble;
             for (ExpNode subnode : node.nodes){
                 compile(subnode, mv);
                 if (doubleFunc)
                     mv.visitInsn(F2D);
             }
-            String name = node.command.string;
-            RunExpFunction function = RunExp.functions.get(name);
+
             mv.visitMethodInsn(INVOKESTATIC, function.className.replaceAll("\\.", "/"), function.methodName, function.argsFormat, false);
             if (doubleFunc)
                 mv.visitInsn(D2F);
