@@ -10,7 +10,7 @@ import static jdk.internal.org.objectweb.asm.Opcodes.*;
 
 public class JvmCompiler {
     public static Expression compile(ExpNode root){
-        ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+        final ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
         cw.visit(V1_6,
                 ACC_PUBLIC | ACC_SUPER,
                 "ExpressionN"+cw.hashCode(),
