@@ -20,9 +20,6 @@ public class RunExp {
     static Map<String, RunExpFunction> functions = new HashMap<>();
     static Set<String> xAliases = new HashSet<>();
 
-    private static final String MATH = "java.lang.Math";
-    private static final String EXP_MATHS = "mihailris.runexp.ExpMaths";
-
     static {
         for (char c = 'a'; c <= 'z'; c++) {
             xAliases.add(String.valueOf(c));
@@ -34,25 +31,44 @@ public class RunExp {
         constants.put("degrad", (float) (Math.PI/180.0));
 
         try {
+            // declaring built-in functions
+            // every built-in function must be added to switch in RunExp.callBuiltinFunc method
+            functions.put("abs", new RunExpFunction("abs", 1, Math.class, "abs", false, true));
             functions.put("sin", new RunExpFunction("sin", 1, Math.class, "sin", true, true));
             functions.put("cos", new RunExpFunction("cos", 1, Math.class, "cos", true, true));
             functions.put("tan", new RunExpFunction("tan", 1, Math.class, "tan", true, true));
             functions.put("exp", new RunExpFunction("exp", 1, Math.class, "exp", true, true));
             functions.put("sqrt", new RunExpFunction("sqrt", 1, Math.class, "sqrt", true, true));
             functions.put("pow", new RunExpFunction("pow", 2, Math.class, "pow", true, true));
-
-            functions.put("abs", new RunExpFunction("abs", 1, Math.class, "abs", false, true));
             functions.put("sign", new RunExpFunction("sign", 1, Math.class, "signum", false, true));
-            functions.put("signum", new RunExpFunction("sign", 1, Math.class, "signum", false, true));
-
+            functions.put("signum", functions.get("sign"));
             functions.put("min", new RunExpFunction("min", 2, Math.class, "min", false, true));
             functions.put("max", new RunExpFunction("max", 2, Math.class, "max", false, true));
-
             functions.put("rand", new RunExpFunction("rand", 1, ExpMaths.class, "rand", false, true));
             functions.put("smoother", new RunExpFunction("smoother", 1, ExpMaths.class, "smoother", false, true));
-        } catch (NoSuchMethodException e){
+        }
+        catch (NoSuchMethodException e){
             throw new RuntimeException(e);
         }
+    }
+
+    public static float callBuiltinFunc(String name, List<ExpNode> args){
+        switch (name){
+            case "abs": return Math.abs(args.get(0).token.value);
+            case "sin": return (float) Math.sin(args.get(0).token.value);
+            case "cos": return (float) Math.cos(args.get(0).token.value);
+            case "tan": return (float) Math.tan(args.get(0).token.value);
+            case "exp": return (float) Math.exp(args.get(0).token.value);
+            case "sqrt": return (float) Math.sqrt(args.get(0).token.value);
+            case "pow": return (float) Math.pow(args.get(0).token.value, args.get(1).token.value);
+            case "sign":
+            case "signum": return Math.signum(args.get(0).token.value);
+            case "min": return Math.min(args.get(0).token.value, args.get(1).token.value);
+            case "max": return Math.max(args.get(0).token.value, args.get(1).token.value);
+            case "rand": return ExpMaths.rand(args.get(0).token.value);
+            case "smoother": return ExpMaths.smoother(args.get(0).token.value);
+        }
+        throw new IllegalStateException();
     }
 
     public static void addConstant(String name, float value){

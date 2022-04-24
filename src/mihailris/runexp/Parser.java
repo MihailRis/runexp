@@ -249,23 +249,9 @@ public class Parser {
     }
 
     private static float callFunc(RunExpFunction function, List<ExpNode> args){
-        if (function.isBuiltin){
-            switch (function.name){
-                case "abs": return Math.abs(args.get(0).token.value);
-                case "sin": return (float) Math.sin(args.get(0).token.value);
-                case "cos": return (float) Math.cos(args.get(0).token.value);
-                case "tan": return (float) Math.tan(args.get(0).token.value);
-                case "sqrt": return (float) Math.sqrt(args.get(0).token.value);
-                case "exp": return (float) Math.exp(args.get(0).token.value);
-                case "sign":
-                case "signum": return Math.signum(args.get(0).token.value);
-                case "pow": return (float) Math.pow(args.get(0).token.value, args.get(1).token.value);
-                case "min": return Math.min(args.get(0).token.value, args.get(1).token.value);
-                case "max": return Math.max(args.get(0).token.value, args.get(1).token.value);
-                case "rand": return ExpMaths.rand(args.get(0).token.value);
-                case "smoother": return ExpMaths.smoother(args.get(0).token.value);
-            }
-        }
+        if (function.isBuiltin)
+            return RunExp.callBuiltinFunc(function.name, args);
+
         // anyway java reflection is a lot of pain for GC
         try {
             Method method = function.method;
