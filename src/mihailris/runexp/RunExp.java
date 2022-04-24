@@ -33,21 +33,26 @@ public class RunExp {
         constants.put("raddeg", (float) (180.0/Math.PI));
         constants.put("degrad", (float) (Math.PI/180.0));
 
-        functions.put("sin", new RunExpFunction("sin", 1, MATH, "sin", true));
-        functions.put("cos", new RunExpFunction("cos", 1, MATH, "cos", true));
-        functions.put("tan", new RunExpFunction("tan", 1, MATH, "tan", true));
-        functions.put("exp", new RunExpFunction("exp", 1, MATH, "exp", true));
-        functions.put("sqrt", new RunExpFunction("sqrt", 1, MATH, "sqrt", true));
-        functions.put("pow", new RunExpFunction("pow", 2, MATH, "pow", true));
+        try {
+            functions.put("sin", new RunExpFunction("sin", 1, Math.class, "sin", true, true));
+            functions.put("cos", new RunExpFunction("cos", 1, Math.class, "cos", true, true));
+            functions.put("tan", new RunExpFunction("tan", 1, Math.class, "tan", true, true));
+            functions.put("exp", new RunExpFunction("exp", 1, Math.class, "exp", true, true));
+            functions.put("sqrt", new RunExpFunction("sqrt", 1, Math.class, "sqrt", true, true));
+            functions.put("pow", new RunExpFunction("pow", 2, Math.class, "pow", true, true));
 
-        functions.put("sign", new RunExpFunction("sign", 1, MATH, "signum", false));
-        functions.put("signum", new RunExpFunction("sign", 1, MATH, "signum", false));
+            functions.put("abs", new RunExpFunction("abs", 1, Math.class, "abs", false, true));
+            functions.put("sign", new RunExpFunction("sign", 1, Math.class, "signum", false, true));
+            functions.put("signum", new RunExpFunction("sign", 1, Math.class, "signum", false, true));
 
-        functions.put("min", new RunExpFunction("min", 2, MATH, "min", false));
-        functions.put("max", new RunExpFunction("max", 2, MATH, "max", false));
+            functions.put("min", new RunExpFunction("min", 2, Math.class, "min", false, true));
+            functions.put("max", new RunExpFunction("max", 2, Math.class, "max", false, true));
 
-        functions.put("rand", new RunExpFunction("rand", 1, EXP_MATHS, "rand", false));
-        functions.put("smoother", new RunExpFunction("smoother", 1, EXP_MATHS, "smoother", false));
+            functions.put("rand", new RunExpFunction("rand", 1, ExpMaths.class, "rand", false, true));
+            functions.put("smoother", new RunExpFunction("smoother", 1, ExpMaths.class, "smoother", false, true));
+        } catch (NoSuchMethodException e){
+            throw new RuntimeException(e);
+        }
     }
 
     public static void addConstant(String name, float value){

@@ -60,7 +60,7 @@ public class JvmCompiler {
             case "-": return FSUB;
             case "%": return FREM;
             default:
-                throw new IllegalStateException();
+                throw new IllegalArgumentException(text);
         }
     }
 

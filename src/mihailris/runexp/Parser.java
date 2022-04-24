@@ -248,6 +248,39 @@ public class Parser {
         }
     }
 
+    private static float callFunc(RunExpFunction function, List<ExpNode> args){
+        if (function.isBuiltin){
+            switch (function.name){
+                case "abs": return Math.abs(args.get(0).token.value);
+                case "sin": return (float) Math.sin(args.get(0).token.value);
+                case "cos": return (float) Math.cos(args.get(0).token.value);
+                case "tan": return (float) Math.tan(args.get(0).token.value);
+                case "sqrt": return (float) Math.sqrt(args.get(0).token.value);
+                case "pow": return (float) Math.pow(args.get(0).token.value, args.get(1).token.value);
+                case "min": return Math.min(args.get(0).token.value, args.get(1).token.value);
+                case "max": return Math.max(args.get(0).token.value, args.get(1).token.value);
+            }
+        }
+        // anyway java reflection is a lot of pain for GC
+        try {
+            Method method = function.method;
+            Object[] values = new Object[args.size()];
+            if (function.isDouble){
+                for (int i = 0; i < args.size(); i++) {
+                    values[i] = (double)args.get(i).token.value;
+                }
+                return (float) (double) method.invoke(null, values);
+            } else {
+                for (int i = 0; i < args.size(); i++) {
+                    values[i] = args.get(i).token.value;
+                }
+                return (float) method.invoke(null, values);
+            }
+        } catch (InvocationTargetException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private static boolean simplify(List<ExpNode> source, List<ExpNode> nodes){
         boolean changed = false;
         for (ExpNode node : source) {
@@ -261,14 +294,7 @@ public class Parser {
                 }
                 if (isconstant){
                     RunExpFunction function = RunExp.functions.get(node.command.string);
-                    try {
-                        Class<?> klass = Class.forName(function.className.replaceAll("/", "."));
-                        Method method = klass.getMethod(function.methodName, double.class);
-                        double result = (double) method.invoke(null, (double)node.nodes.get(0).token.value);
-                        node = new ExpNode(new Token(Token.Tag.VALUE, (float)result, node.command.pos));
-                    } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
-                        e.printStackTrace();
-                    }
+                    node = new ExpNode(new Token(Token.Tag.VALUE, callFunc(function, node.nodes), node.command.pos));
                 }
             }
             if (node.command != null && node.command.tag == Token.Tag.OPERATOR) {

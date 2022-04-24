@@ -30,6 +30,7 @@ float value = RunExp.eval("pi * 0.5");
 - unary operations: '-'
 - binary operations: '+', '-', '*', '/' and '^' (exponentation)
 - functions:
+  - abs
   - sin
   - cos
   - tan
