@@ -11,15 +11,16 @@ Expression expression = RunExp.compile("sin(x) * 0.5 + (x * 0.1)")
 expression.eval(1.25f) // same as sin(1.25f) * 0.5f + (1.25f * 0.1f)
 ```
 
-constant (if Expression object needed):
-```java
-Expression expression = RunExp.compile("pi ^ 2", true)
-```
 
-### Solve constant expression with no Expression creation:
+### Solve constant expression:
 
 ```java
 float value = RunExp.eval("pi * 0.5");
+```
+
+if Expression wrapper needed (ConstantExpression used):
+```java
+Expression expression = RunExp.compile("pi ^ 2", true)
 ```
 
 ### Setting up:
