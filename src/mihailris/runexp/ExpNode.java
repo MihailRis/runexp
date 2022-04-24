@@ -43,7 +43,9 @@ public class ExpNode {
         if (token != null){
             if (token.tag == Token.Tag.VALUE)
                 return String.valueOf(token.value);
-            throw new IllegalStateException();
+            if (token.tag == Token.Tag.VARIABLE)
+                return token.string;
+            throw new IllegalStateException(String.valueOf(token.tag));
         } else {
             StringBuilder text = new StringBuilder();
             if (command != null){

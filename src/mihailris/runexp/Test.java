@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class Test {
     public static void main(String[] args){
-        RunExp.verbose = false;
+        RunExp.verbose = true;
         Scanner scanner = new Scanner(System.in);
         while (true) {
             System.out.print(">: ");
