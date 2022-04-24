@@ -14,7 +14,12 @@ public class RunExp {
     public static final String VERSION_STRING = "1.0";
     public static final int VERSION = 1;
     public static boolean verbose;
+    /**
+     * allow RunExp compile expressions into JVM-bytecode for the best performance<br>
+     * not used for constant expressions (with no X)
+     */
     public static boolean allowJVM = true;
+
     private static final Tokenizer tokenizer = new Tokenizer();
     static Map<String, Float> constants = new HashMap<>();
     static Map<String, RunExpFunction> functions = new HashMap<>();
@@ -52,7 +57,13 @@ public class RunExp {
         }
     }
 
-    public static float callBuiltinFunc(String name, List<ExpNode> args){
+    /**
+     * Created to avoid java-reflection GC-hell if no one custom function used when RunExp.allowJVM is false
+     * @param name function name
+     * @param args list of constant AST value-nodes
+     * @return result of function execution
+     */
+    static float callBuiltinFunc(String name, List<ExpNode> args){
         switch (name){
             case "abs": return Math.abs(args.get(0).token.value);
             case "sin": return (float) Math.sin(args.get(0).token.value);
@@ -71,6 +82,10 @@ public class RunExp {
         throw new IllegalStateException();
     }
 
+    /**
+     * @param name constant name
+     * @param value constant value (will be inlined in compiled expressions)
+     */
     public static void addConstant(String name, float value){
         constants.put(name, value);
     }
@@ -79,10 +94,20 @@ public class RunExp {
         xAliases.add(alias);
     }
 
+    /**
+     * @param code expression string
+     * @return calculated constant value for given expression
+     * @throws ExpCompileException when an error ocurred during expression parsing
+     */
     public static float eval(String code) throws ExpCompileException {
         return parse(code, true).token.value;
     }
 
+    /**
+     * @param code expression string
+     * @return expression
+     * @throws ExpCompileException when an error ocurred during expression parsing
+     */
     public static Expression compile(String code) throws ExpCompileException {
         return compile(code, false);
     }

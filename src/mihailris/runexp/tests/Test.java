@@ -1,4 +1,8 @@
-package mihailris.runexp;
+package mihailris.runexp.tests;
+
+import mihailris.runexp.ExpCompileException;
+import mihailris.runexp.Expression;
+import mihailris.runexp.RunExp;
 
 import java.util.Scanner;
 
