@@ -126,7 +126,7 @@ public class JvmCompiler {
             }
             String name = node.command.string;
             RunExpFunction function = RunExp.functions.get(name);
-            mv.visitMethodInsn(INVOKESTATIC, function.className, function.methodName, function.argsFormat, false);
+            mv.visitMethodInsn(INVOKESTATIC, function.className.replaceAll("\\.", "/"), function.methodName, function.argsFormat, false);
             if (doubleFunc)
                 mv.visitInsn(D2F);
         }

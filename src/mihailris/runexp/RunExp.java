@@ -20,8 +20,8 @@ public class RunExp {
     static Map<String, RunExpFunction> functions = new HashMap<>();
     static Set<String> xAliases = new HashSet<>();
 
-    private static final String MATH = "java/lang/Math";
-    private static final String EXP_MATHS = "mihailris/runexp/ExpMaths";
+    private static final String MATH = "java.lang.Math";
+    private static final String EXP_MATHS = "mihailris.runexp.ExpMaths";
 
     static {
         for (char c = 'a'; c <= 'z'; c++) {
@@ -59,18 +59,27 @@ public class RunExp {
     }
 
     public static float eval(String code) throws ExpCompileException {
-        return compile(code, true).eval(0);
+        return parse(code, true).token.value;
     }
 
     public static Expression compile(String code) throws ExpCompileException {
         return compile(code, false);
     }
 
-    public static Expression compile(String code, boolean constant) throws ExpCompileException {
+    private static ExpNode parse(String code, boolean constant) throws ExpCompileException {
         List<RawToken> tokens = tokenizer.perform(code);
         ExpNode root = Parser.parse(tokens, constant);
-        if (root.nodes.isEmpty()){
-            throw new ExpCompileException("empty expression", 0, ERR_EMPTY_EXPRESSION);
+        if (root.nodes.isEmpty()) {
+            if (root.token == null)
+                throw new ExpCompileException("empty expression", 0, ERR_EMPTY_EXPRESSION);
+        }
+        return root;
+    }
+
+    public static Expression compile(String code, boolean constant) throws ExpCompileException {
+        ExpNode root = parse(code, constant);
+        if (root.nodes.isEmpty() && root.token.tag == Token.Tag.VALUE) {
+            return new ConstantExpression(root.token.value);
         }
         if (RunExp.verbose) {
             System.out.println("simplified: "+root.toStringExpression());
@@ -79,14 +88,14 @@ public class RunExp {
 
         if (allowJVM) {
             try {
-                return JvmCompiler.compile(root.get(0));
+                return JvmCompiler.compile(root);
             } catch (Exception e) {
                 System.err.println("could not to compile expression into java bytecode");
                 e.printStackTrace();
             }
         }
 
-        return Compiler.compile(root.get(0));
+        return Compiler.compile(root);
     }
 
     static String ast2Str(List<ExpNode> nodes, int indent){

@@ -24,15 +24,6 @@ public class ExpNode {
         this.nodes = nodes;
     }
 
-    ExpNode(){
-        this.token = null;
-        this.nodes = new ArrayList<>();
-    }
-
-    void put(ExpNode node){
-        nodes.add(node);
-    }
-
     ExpNode get(int index){
         if (nodes.size() <= index)
             return null;

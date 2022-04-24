@@ -1,5 +1,7 @@
 package mihailris.runexp;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -92,9 +94,17 @@ public class Parser {
             nodes = newNodes;
             iterations++;
         }
+
         if (RunExp.verbose)
             System.out.println("runexp: simplified in "+iterations+" iterations");
-        return new ExpNode(nodes);
+
+        ExpNode root;
+        if (nodes.size() == 1){
+            root = nodes.get(0);
+        } else {
+            root = new ExpNode(nodes);
+        }
+        return root;
     }
 
     private static int parseBlocks(List<ExpNode> source, List<ExpNode> nodes, int index, boolean closeable) throws ExpCompileException {
@@ -241,6 +251,26 @@ public class Parser {
     private static boolean simplify(List<ExpNode> source, List<ExpNode> nodes){
         boolean changed = false;
         for (ExpNode node : source) {
+            if (node.command != null && node.command.tag == Token.Tag.FUNCTION){
+                boolean isconstant = true;
+                for (ExpNode arg : node.nodes){
+                    if (!(arg.token != null && arg.token.tag == Token.Tag.VALUE)){
+                        isconstant = false;
+                        break;
+                    }
+                }
+                if (isconstant){
+                    RunExpFunction function = RunExp.functions.get(node.command.string);
+                    try {
+                        Class<?> klass = Class.forName(function.className.replaceAll("/", "."));
+                        Method method = klass.getMethod(function.methodName, double.class);
+                        double result = (double) method.invoke(null, (double)node.nodes.get(0).token.value);
+                        node = new ExpNode(new Token(Token.Tag.VALUE, (float)result, node.command.pos));
+                    } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
             if (node.command != null && node.command.tag == Token.Tag.OPERATOR) {
                 // unary operators
                 if (node.nodes.size() == 1) {
