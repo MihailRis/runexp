@@ -1,5 +1,5 @@
 # RunExp
-A lightweight math expressions solver for Java that compiles expressions directly into JVM bytecode to minimize runtime overhead.
+A lightweight math expressions solver for Java that compiles expressions directly into JVM bytecode to minimize runtime overhead aimed to precompiling expressions.
 
 Also planned to implement runexp-bytecode compilation to use when JVM-bytecode build is not available.
 
