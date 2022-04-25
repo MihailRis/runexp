@@ -6,7 +6,9 @@ import static mihailris.runexp.Compiler.*;
 
 /**
  * Simple stack machine
+ * @deprecated two times slower than OOP implementation
  */
+@Deprecated
 public class CompiledExpression implements Expression {
     final RunExpFunction[] functions;
     final byte[] bytecode;

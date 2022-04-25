@@ -1,6 +1,11 @@
 package mihailris.runexp;
 
 
+import mihailris.runexp.treeexps.ExpBinaryOperator;
+import mihailris.runexp.treeexps.ExpCall;
+import mihailris.runexp.treeexps.ExpUnaryOperator;
+import mihailris.runexp.treeexps.ExpVariable;
+
 public class Compiler {
     private final byte[] bytecode = new byte[256];
     private final RunExpFunction[] functions = new RunExpFunction[256];
@@ -28,7 +33,7 @@ public class Compiler {
         return functionsCount++;
     }
 
-    public CompiledExpression compile(ExpNode root){
+    public CompiledExpression compileBytecode(ExpNode root){
         if (root.command == null){
             if (root.token != null) {
                 if (root.token.tag == Token.Tag.VALUE) {
@@ -40,13 +45,13 @@ public class Compiler {
                 }
             } else {
                 for (ExpNode node : root.nodes){
-                    compile(node);
+                    compileBytecode(node);
                 }
             }
         } else {
             if (root.command.tag == Token.Tag.OPERATOR){
                 for (ExpNode node : root.nodes){
-                    compile(node);
+                    compileBytecode(node);
                 }
                 if (root.nodes.size() == 1){
                     bytecode[bytecodeLength++] = (byte) unaryOp(root.command.string);
@@ -57,13 +62,45 @@ public class Compiler {
                 RunExpFunction function = RunExp.functions.get(root.command.string);
                 int functionIndex = pushFunction(function);
                 for (ExpNode node : root.nodes){
-                    compile(node);
+                    compileBytecode(node);
                 }
                 bytecode[bytecodeLength++] = C_CALL;
                 bytecode[bytecodeLength++] = (byte) functionIndex;
             }
         }
         return new CompiledExpression(bytecode, constants, functions);
+    }
+
+    public Expression compile(ExpNode root){
+        if (root.command == null){
+            if (root.token != null) {
+                if (root.token.tag == Token.Tag.VALUE) {
+                    return new ConstantExpression(root.token.value);
+                } else if (root.token.tag == Token.Tag.VARIABLE) {
+                    return new ExpVariable();
+                }
+            } else {
+                assert (root.nodes.size() == 1);
+                return compile(root.nodes.get(0));
+            }
+        } else {
+            if (root.command.tag == Token.Tag.OPERATOR){
+                if (root.nodes.size() == 1){
+                    return new ExpUnaryOperator(compile(root.nodes.get(0)));
+                }
+                return new ExpBinaryOperator(compile(root.nodes.get(0)),
+                                             compile(root.nodes.get(1)),
+                                             root.command.string.charAt(0));
+            } else if (root.command.tag == Token.Tag.FUNCTION){
+                RunExpFunction function = RunExp.functions.get(root.command.string);
+                Expression[] args = new Expression[function.argCount];
+                for (int i = 0; i < args.length; i++) {
+                    args[i] = compile(root.nodes.get(i));
+                }
+                return new ExpCall(function, args);
+            }
+        }
+        throw new IllegalStateException();
     }
 
     public static final int C_CONST = 1;

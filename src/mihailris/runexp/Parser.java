@@ -248,7 +248,7 @@ public class Parser {
         }
     }
 
-    static float callFunc(RunExpFunction function, float[] args, int offset, int argc){
+    public static float callFunc(RunExpFunction function, float[] args, int offset, int argc){
         if (function.isBuiltin)
             return RunExp.callBuiltinFunc(function.name, args);
 
