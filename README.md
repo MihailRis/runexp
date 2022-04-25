@@ -1,5 +1,5 @@
 # RunExp
-A lightweight math expressions solver for Java that compiles expressions directly into JVM bytecode to minimize runtime usage time overhead.
+A lightweight math expressions solver for Java that compiles expressions directly into JVM bytecode to minimize runtime overhead.
 
 Also planned to implement runexp-bytecode compilation to use when JVM-bytecode build is not available.
 
@@ -7,8 +7,8 @@ Also planned to implement runexp-bytecode compilation to use when JVM-bytecode b
 
 with x:
 ```java
-Expression expression = RunExp.compile("sin(x) * 0.5 + (x * 0.1)")
-expression.eval(1.25f) // same as sin(1.25f) * 0.5f + (1.25f * 0.1f)
+Expression expression = RunExp.compile("sin(x) * 0.5 + (x * 0.1)");
+expression.eval(1.25f) // same as sin(1.25f) * 0.5f + (1.25f * 0.1f);
 ```
 
 
@@ -20,7 +20,7 @@ float value = RunExp.eval("pi * 0.5");
 
 if Expression wrapper needed (ConstantExpression used):
 ```java
-Expression expression = RunExp.compile("pi ^ 2", true)
+Expression expression = RunExp.compile("pi ^ 2", true);
 ```
 
 ### Setting up:
@@ -52,10 +52,10 @@ Expression expression = RunExp.compile("pi ^ 2", true)
 
 # Examples:
 ```java
-try:
+try {
   int width = (int)RunExp.eval(widthField.getText());
   // ...
-catch (ExpCompileException e){
+} catch (ExpCompileException e){
   invalidInputMessage(e.message);
 }
 ```
