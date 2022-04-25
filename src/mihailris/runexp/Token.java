@@ -23,6 +23,13 @@ public class Token {
         this.pos = pos;
     }
 
+    @Override
+    public String toString(){
+        if (tag == Tag.VALUE)
+            return "<"+tag+":"+value+">";
+        return "<"+tag+":"+string+">";
+    }
+
     public enum Tag {
         VALUE,
         VARIABLE,

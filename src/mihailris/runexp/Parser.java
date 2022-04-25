@@ -248,22 +248,22 @@ public class Parser {
         }
     }
 
-    private static float callFunc(RunExpFunction function, List<ExpNode> args){
+    static float callFunc(RunExpFunction function, float[] args, int offset, int argc){
         if (function.isBuiltin)
             return RunExp.callBuiltinFunc(function.name, args);
 
         // anyway java reflection is a lot of pain for GC
         try {
             Method method = function.method;
-            Object[] values = new Object[args.size()];
+            Object[] values = new Object[argc];
             if (function.isDouble){
-                for (int i = 0; i < args.size(); i++) {
-                    values[i] = (double)args.get(i).token.value;
+                for (int i = 0; i < argc; i++) {
+                    values[i] = (double)args[offset+i];
                 }
                 return (float) (double) method.invoke(null, values);
             } else {
-                for (int i = 0; i < args.size(); i++) {
-                    values[i] = args.get(i).token.value;
+                for (int i = 0; i < argc; i++) {
+                    values[i] = args[offset+i];
                 }
                 return (float) method.invoke(null, values);
             }
@@ -285,7 +285,11 @@ public class Parser {
                 }
                 if (isconstant){
                     RunExpFunction function = RunExp.functions.get(node.command.string);
-                    node = new ExpNode(new Token(Token.Tag.VALUE, callFunc(function, node.nodes), node.command.pos));
+                    float[] args = new float[node.nodes.size()];
+                    for (int i = 0; i < node.nodes.size(); i++) {
+                        args[i] = node.nodes.get(i).token.value;
+                    }
+                    node = new ExpNode(new Token(Token.Tag.VALUE, callFunc(function, args, 0, args.length), node.command.pos));
                 }
             }
             if (node.command != null && node.command.tag == Token.Tag.OPERATOR) {

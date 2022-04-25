@@ -60,24 +60,24 @@ public class RunExp {
     /**
      * Created to avoid java-reflection GC-hell if no one custom function used when RunExp.allowJVM is false
      * @param name function name
-     * @param args list of constant AST value-nodes
+     * @param args array of input values
      * @return result of function execution
      */
-    static float callBuiltinFunc(String name, List<ExpNode> args){
+    static float callBuiltinFunc(String name, float[] args){
         switch (name){
-            case "abs": return Math.abs(args.get(0).token.value);
-            case "sin": return (float) Math.sin(args.get(0).token.value);
-            case "cos": return (float) Math.cos(args.get(0).token.value);
-            case "tan": return (float) Math.tan(args.get(0).token.value);
-            case "exp": return (float) Math.exp(args.get(0).token.value);
-            case "sqrt": return (float) Math.sqrt(args.get(0).token.value);
-            case "pow": return (float) Math.pow(args.get(0).token.value, args.get(1).token.value);
+            case "abs": return Math.abs(args[0]);
+            case "sin": return (float) Math.sin(args[0]);
+            case "cos": return (float) Math.cos(args[0]);
+            case "tan": return (float) Math.tan(args[0]);
+            case "exp": return (float) Math.exp(args[0]);
+            case "sqrt": return (float) Math.sqrt(args[0]);
+            case "pow": return (float) Math.pow(args[0], args[1]);
             case "sign":
-            case "signum": return Math.signum(args.get(0).token.value);
-            case "min": return Math.min(args.get(0).token.value, args.get(1).token.value);
-            case "max": return Math.max(args.get(0).token.value, args.get(1).token.value);
-            case "rand": return ExpMaths.rand(args.get(0).token.value);
-            case "smoother": return ExpMaths.smoother(args.get(0).token.value);
+            case "signum": return Math.signum(args[0]);
+            case "min": return Math.min(args[0], args[1]);
+            case "max": return Math.max(args[0], args[1]);
+            case "rand": return ExpMaths.rand(args[0]);
+            case "smoother": return ExpMaths.smoother(args[0]);
         }
         throw new IllegalStateException();
     }
@@ -141,7 +141,8 @@ public class RunExp {
             }
         }
 
-        return Compiler.compile(root);
+        Compiler compiler = new Compiler();
+        return compiler.compile(root);
     }
 
     static String ast2Str(List<ExpNode> nodes, int indent){
