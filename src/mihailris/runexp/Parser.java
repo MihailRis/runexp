@@ -23,6 +23,9 @@ public class Parser {
             switch (rawToken.tag){
                 case NAME:{
                     if (i < tokens.size()-1 && tokens.get(i+1).tag == RawToken.Tag.OPEN){
+                        if (RunExp.functions.get(rawToken.text) == null)
+                            throw new ExpCompileException(
+                                    "unknown function '"+rawToken.text+"'", rawToken.pos, ERR_UNKNOWN_FUNCTION);
                         token = new Token(Token.Tag.FUNCTION, rawToken.text, rawToken.pos);
                     } else {
                         Float constantValue = RunExp.constants.get(rawToken.text);
@@ -128,7 +131,7 @@ public class Parser {
         return index;
     }
 
-    private static void parseCalls(List<ExpNode> source, List<ExpNode> nodes){
+    private static void parseCalls(List<ExpNode> source, List<ExpNode> nodes) {
         ExpNode prev;
         ExpNode node = null;
         for (ExpNode expNode : source) {
@@ -151,7 +154,7 @@ public class Parser {
         }
     }
 
-    private static void parseArguments(List<ExpNode> source, List<ExpNode> nodes, boolean call) {
+    private static void parseArguments(List<ExpNode> source, List<ExpNode> nodes, boolean call) throws ExpCompileException {
         List<ExpNode> argument = new ArrayList<>();
         for (ExpNode node : source) {
             if (node.token != null && node.token.tag == Token.Tag.SEPARATOR) {
@@ -164,7 +167,16 @@ public class Parser {
             if (node.token == null) {
                 List<ExpNode> out = new ArrayList<>();
                 parseArguments(node.nodes, out, node.command != null);
-                argument.add(new ExpNode(node.command, out));
+                node = new ExpNode(node.command, out);
+
+                if (node.command != null && node.command.tag == Token.Tag.FUNCTION){
+                    RunExpFunction function = RunExp.functions.get(node.command.string);
+                    if (function.argCount != out.size())
+                        throw new ExpCompileException(
+                                "wrong arguments count passed to '"+function.name+"' "+out.size()+"/"+function.argCount,
+                                node.command.pos, ERR_WRONG_ARGS_COUNT);
+                }
+                argument.add(node);
                 continue;
             }
             argument.add(node);
