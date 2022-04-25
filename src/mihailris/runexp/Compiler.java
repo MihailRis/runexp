@@ -77,7 +77,7 @@ public class Compiler {
                 if (root.token.tag == Token.Tag.VALUE) {
                     return new ConstantExpression(root.token.value);
                 } else if (root.token.tag == Token.Tag.VARIABLE) {
-                    return new ExpVariable();
+                    return ExpVariable.INSTANCE;
                 }
             } else {
                 assert (root.nodes.size() == 1);
