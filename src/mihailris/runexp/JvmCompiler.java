@@ -13,7 +13,7 @@ public class JvmCompiler {
         final ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
         cw.visit(V1_6,
                 ACC_PUBLIC | ACC_SUPER,
-                "ExpressionN"+cw.hashCode(),
+                "Expression$"+cw.hashCode(),
                 null,
                 "java/lang/Object",
                 new String[]{Expression.class.getName().replace(".", "/")});
@@ -43,7 +43,7 @@ public class JvmCompiler {
         try {
             return (Expression) new ClassLoader(Expression.class.getClassLoader()) {
                 public Class<?> defineClass(byte[] bytes) {
-                    return super.defineClass("ExpressionN"+cw.hashCode(), bytes, 0, bytes.length);
+                    return super.defineClass("Expression$"+cw.hashCode(), bytes, 0, bytes.length);
                 }
             }.defineClass(raw).newInstance();
         } catch (InstantiationException | IllegalAccessException e) {
