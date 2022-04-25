@@ -8,7 +8,7 @@ Also planned to implement runexp-bytecode compilation to use when JVM-bytecode b
 with x:
 ```java
 Expression expression = RunExp.compile("sin(x) * 0.5 + (x * 0.1)");
-expression.eval(1.25f) // same as sin(1.25f) * 0.5f + (1.25f * 0.1f);
+expression.eval(1.25f); // same as sin(1.25f) * 0.5f + (1.25f * 0.1f)
 ```
 
 
