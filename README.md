@@ -7,6 +7,12 @@ with x:
 ```java
 Expression expression = RunExp.compile("sin(x) * 0.5 + (x * 0.1)");
 expression.eval(1.25f); // same as sin(1.25f) * 0.5f + (1.25f * 0.1f)
+
+// or
+
+RunExpSolver solver = new RunExpSolver();
+Expression expression = solver.compile("sin(x) * 0.5 + (x * 0.1)");
+expression.eval(1.25f); // same as sin(1.25f) * 0.5f + (1.25f * 0.1f)
 ```
 
 
