@@ -31,6 +31,15 @@ solver.addConstant("g", 9.8f);
 float value = solver.eval(expressionString);
 ```
 - Add custom constant: `solver.addConstant(name, value)`
+- Add custom function (example): 
+```java 
+try {
+  solver.addFunction("noise", 2, Noise.class, "noise2d", false);
+} catch (NoSuchMethodException e){
+  ...
+}
+// see RunExpSolver.addFunction docs for more info
+``` 
 - `solver.allowJVM` setting - allow compiling expressions directly into JVM bytecode (true by default)
 
 # Features:

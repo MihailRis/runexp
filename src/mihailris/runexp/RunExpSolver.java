@@ -51,6 +51,18 @@ public class RunExpSolver {
         constants.put(name, value);
     }
 
+    /**
+     * @param name name of function in expressions
+     * @param argsCount count of function arguments
+     * @param sourceClass class that contains target method
+     * @param methodName name of method that will be called as function
+     * @param isDouble use it if function works with double values (such as Math.sqrt, Math.sin, etc..)
+     * @throws NoSuchMethodException will be trown if there's no such method at given class
+     */
+    public void addFunction(String name, int argsCount, Class<?> sourceClass, String methodName, boolean isDouble) throws NoSuchMethodException {
+        functions.put(name, new RunExpFunction(name, argsCount, sourceClass, methodName, isDouble));
+    }
+
     public void addXAlias(String alias){
         xAliases.add(alias);
     }
