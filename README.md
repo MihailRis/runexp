@@ -64,7 +64,8 @@ try {
   - e (Math.E)
   - raddeg (180.0 / Math.PI) usage: degrees = radians * raddeg
   - degrad (Math.PI / 180.0) usage: radians = degreen * degrad
-
+- custom constants
+- custom functions (directly calling static methods as functions)
 # Examples:
 ```java
 try {
