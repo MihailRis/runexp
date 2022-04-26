@@ -7,6 +7,12 @@ import mihailris.runexp.treeexps.ExpUnaryOperator;
 import mihailris.runexp.treeexps.ExpVariable;
 
 public class Compiler {
+    private final RunExpSolver solver;
+
+    public Compiler(RunExpSolver solver) {
+        this.solver = solver;
+    }
+
     public Expression compile(ExpNode root){
         if (root.command == null){
             if (root.token != null) {
@@ -28,7 +34,7 @@ public class Compiler {
                                              compile(root.nodes.get(1)),
                                              root.command.string.charAt(0));
             } else if (root.command.tag == Token.Tag.FUNCTION){
-                RunExpFunction function = RunExp.functions.get(root.command.string);
+                RunExpFunction function = solver.functions.get(root.command.string);
                 Expression[] args = new Expression[function.argCount];
                 for (int i = 0; i < args.length; i++) {
                     args[i] = compile(root.nodes.get(i));

@@ -4,7 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ExpNode {
+    /**
+     * function name or operator
+     */
     Token command;
+    /**
+     * constant value or variable
+     */
     final Token token;
     final List<ExpNode> nodes;
 
@@ -30,6 +36,9 @@ public class ExpNode {
         return nodes.get(index);
     }
 
+    /**
+     * @return reconstructed expression string
+     */
     public String toStringExpression(){
         if (token != null){
             if (token.tag == Token.Tag.VALUE)

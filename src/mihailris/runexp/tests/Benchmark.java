@@ -9,9 +9,9 @@ public class Benchmark {
         int iterations = 10_000_000;
         System.out.println(iterations+" iterations");
         String expressionString = "x + abs(x - 1) * max(x*3, x+x^2)";
-        RunExp.allowJVM = true;
+        RunExp.solver.allowJVM = true;
         System.out.println("RunExp.allowJVM=true: "+test(expressionString, iterations)+" ms");
-        RunExp.allowJVM = false;
+        RunExp.solver.allowJVM = false;
         System.out.println("RunExp.allowJVM=false: "+test(expressionString, iterations)+" ms");
     }
 

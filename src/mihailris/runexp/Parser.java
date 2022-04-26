@@ -13,8 +13,13 @@ public class Parser {
         "*/%",
         "+-",
     };
+    final RunExpSolver solver;
 
-    public static List<ExpNode> performRawTokens(List<RawToken> tokens, boolean constant) throws ExpCompileException {
+    Parser(RunExpSolver solver) {
+        this.solver = solver;
+    }
+
+    public List<ExpNode> performRawTokens(List<RawToken> tokens, boolean constant) throws ExpCompileException {
         List<ExpNode> nodes = new ArrayList<>();
         for (int i = 0; i < tokens.size(); i++){
             RawToken rawToken = tokens.get(i);
@@ -23,12 +28,12 @@ public class Parser {
             switch (rawToken.tag){
                 case NAME:{
                     if (i < tokens.size()-1 && tokens.get(i+1).tag == RawToken.Tag.OPEN){
-                        if (RunExp.functions.get(rawToken.text) == null)
+                        if (solver.functions.get(rawToken.text) == null)
                             throw new ExpCompileException(
                                     "unknown function '"+rawToken.text+"'", rawToken.pos, ERR_UNKNOWN_FUNCTION);
                         token = new Token(Token.Tag.FUNCTION, rawToken.text, rawToken.pos);
                     } else {
-                        Float constantValue = RunExp.constants.get(rawToken.text);
+                        Float constantValue = solver.constants.get(rawToken.text);
                         if (constantValue != null) {
                             token = new Token(Token.Tag.VALUE, constantValue, rawToken.pos);
                         } else {
@@ -36,7 +41,7 @@ public class Parser {
                                 throw new ExpCompileException("unknown constant '" + rawToken.text + "'",
                                         rawToken.pos, ERR_UNKNOWN_CONSTANT);
                             }
-                            if (!RunExp.xAliases.contains(rawToken.text)) {
+                            if (!solver.xAliases.contains(rawToken.text)) {
                                 throw new ExpCompileException("unknown name '" + rawToken.text + "'",
                                         rawToken.pos, ERR_UNKNOWN_NAME);
                             }
@@ -64,7 +69,7 @@ public class Parser {
         return nodes;
     }
 
-    public static ExpNode parse(List<RawToken> tokens, boolean constant) throws ExpCompileException {
+    public ExpNode parse(List<RawToken> tokens, boolean constant) throws ExpCompileException {
         List<ExpNode> nodes = performRawTokens(tokens, constant);
 
         List<ExpNode> newNodes = new ArrayList<>();
@@ -98,7 +103,7 @@ public class Parser {
             iterations++;
         }
 
-        if (RunExp.verbose)
+        if (solver.verbose)
             System.out.println("runexp: simplified in "+iterations+" iterations");
 
         ExpNode root;
@@ -110,10 +115,11 @@ public class Parser {
         return root;
     }
 
-    private static int parseBlocks(List<ExpNode> source, List<ExpNode> nodes, int index, boolean closeable) throws ExpCompileException {
+    private int parseBlocks(List<ExpNode> source, List<ExpNode> nodes, int index, boolean closeable) throws ExpCompileException {
         for (; index < source.size(); index++) {
             ExpNode node = source.get(index);
             Token token = node.token;
+            assert (token != null);
             if (token.tag == Token.Tag.OPEN){
                 List<ExpNode> out = new ArrayList<>();
                 index = parseBlocks(source, out, index+1, true);
@@ -131,7 +137,7 @@ public class Parser {
         return index;
     }
 
-    private static void parseCalls(List<ExpNode> source, List<ExpNode> nodes) {
+    private void parseCalls(List<ExpNode> source, List<ExpNode> nodes) {
         ExpNode prev;
         ExpNode node = null;
         for (ExpNode expNode : source) {
@@ -154,7 +160,7 @@ public class Parser {
         }
     }
 
-    private static void parseArguments(List<ExpNode> source, List<ExpNode> nodes, boolean call) throws ExpCompileException {
+    private void parseArguments(List<ExpNode> source, List<ExpNode> nodes, boolean call) throws ExpCompileException {
         List<ExpNode> argument = new ArrayList<>();
         for (ExpNode node : source) {
             if (node.token != null && node.token.tag == Token.Tag.SEPARATOR) {
@@ -170,7 +176,7 @@ public class Parser {
                 node = new ExpNode(node.command, out);
 
                 if (node.command != null && node.command.tag == Token.Tag.FUNCTION){
-                    RunExpFunction function = RunExp.functions.get(node.command.string);
+                    RunExpFunction function = solver.functions.get(node.command.string);
                     if (function.argCount != out.size())
                         throw new ExpCompileException(
                                 "wrong arguments count passed to '"+function.name+"' "+out.size()+"/"+function.argCount,
@@ -189,7 +195,7 @@ public class Parser {
         }
     }
 
-    private static void parseUnary(List<ExpNode> source, List<ExpNode> nodes){
+    private void parseUnary(List<ExpNode> source, List<ExpNode> nodes){
         for (int index = 0; index < source.size(); index++) {
             ExpNode node = source.get(index);
             if (node.token == null){
@@ -219,7 +225,7 @@ public class Parser {
         }
     }
 
-    private static void parseBinary(List<ExpNode> source, List<ExpNode> nodes, String group){
+    private void parseBinary(List<ExpNode> source, List<ExpNode> nodes, String group){
         for (int index = 0; index < source.size(); index++) {
             ExpNode node = source.get(index);
             if (node.token == null){
@@ -284,7 +290,7 @@ public class Parser {
         }
     }
 
-    private static boolean simplify(List<ExpNode> source, List<ExpNode> nodes){
+    private boolean simplify(List<ExpNode> source, List<ExpNode> nodes){
         boolean changed = false;
         for (ExpNode node : source) {
             if (node.command != null && node.command.tag == Token.Tag.FUNCTION){
@@ -296,7 +302,7 @@ public class Parser {
                     }
                 }
                 if (isconstant){
-                    RunExpFunction function = RunExp.functions.get(node.command.string);
+                    RunExpFunction function = solver.functions.get(node.command.string);
                     float[] args = new float[node.nodes.size()];
                     for (int i = 0; i < node.nodes.size(); i++) {
                         args[i] = node.nodes.get(i).token.value;

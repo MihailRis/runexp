@@ -9,7 +9,13 @@ import java.lang.reflect.Method;
 import static jdk.internal.org.objectweb.asm.Opcodes.*;
 
 public class JvmCompiler {
-    public static Expression compile(ExpNode root){
+    private final RunExpSolver solver;
+
+    public JvmCompiler(RunExpSolver solver) {
+        this.solver = solver;
+    }
+
+    public Expression compile(ExpNode root){
         final ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
         cw.visit(V1_6,
                 ACC_PUBLIC | ACC_SUPER,
@@ -64,7 +70,7 @@ public class JvmCompiler {
         }
     }
 
-    private static void compile(ExpNode node, MethodVisitor mv) {
+    private void compile(ExpNode node, MethodVisitor mv) {
         if (node.token != null && node.token.tag == Token.Tag.VALUE){
             mv.visitLdcInsn(node.token.value);
             return;
@@ -105,7 +111,7 @@ public class JvmCompiler {
         }
         if (node.command != null && node.command.tag == Token.Tag.FUNCTION){
             String name = node.command.string;
-            RunExpFunction function = RunExp.functions.get(name);
+            RunExpFunction function = solver.functions.get(name);
 
             boolean doubleFunc = function.isDouble;
             for (ExpNode subnode : node.nodes){
