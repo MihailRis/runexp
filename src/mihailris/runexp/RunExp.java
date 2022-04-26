@@ -55,16 +55,26 @@ public class RunExp {
         solver = new RunExpSolver();
     }
 
+    /**
+     * @param expressionString target expression string
+     * @return calculated constant value for given expression
+     * @throws ExpCompileException when an error ocurred during expression parsing
+     */
     public static float eval(String expressionString) throws ExpCompileException {
         return solver.eval(expressionString);
     }
 
+    /**
+     * @param expressionString target expression string
+     * @return expression
+     * @throws ExpCompileException when an error ocurred during expression parsing
+     */
     public static Expression compile(String expressionString) throws ExpCompileException {
         return solver.compile(expressionString);
     }
 
-    public static Expression compile(String code, boolean constant) throws ExpCompileException {
-        return solver.compile(code, constant);
+    public static ConstantExpression compileConstant(String code) throws ExpCompileException {
+        return (ConstantExpression) solver.compile(code, true);
     }
 
     /**

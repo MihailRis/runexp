@@ -82,7 +82,7 @@ public class JvmCompiler {
         if (node.command != null && node.command.tag == Token.Tag.OPERATOR){
             if (node.nodes.size() == 1){
                 compile(node.get(0), mv);
-                mv.visitInsn(FNEG); // TODO: other unaries theoritically support
+                mv.visitInsn(FNEG); // currently it's the only unary operation
             } else {
                 ExpNode a = node.get(0);
                 ExpNode b = node.get(1);

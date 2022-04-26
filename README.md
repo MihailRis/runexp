@@ -18,12 +18,20 @@ float value = RunExp.eval("pi * 0.5");
 
 if Expression wrapper needed (ConstantExpression used):
 ```java
-Expression expression = RunExp.compile("pi ^ 2", true);
+ConstantExpression expression = RunExp.compileConstant("pi ^ 2");
 ```
 
 ### Setting up:
-- Add custom constant: `RunExp.addConstant(name, value)`
-- RunExp.allowJVM setting - allow compiling expressions directly into JVM bytecode (true by default)
+RunExp class uses RunExpSolver instance available as `RunExp.solver`, but it's preferred
+to create new one.
+```java
+RunExpSolver solver = new RunExpSolver();
+solver.addConstant("g", 9.8f);
+...
+float value = solver.eval(expressionString);
+```
+- Add custom constant: `solver.addConstant(name, value)`
+- `solver.allowJVM` setting - allow compiling expressions directly into JVM bytecode (true by default)
 
 # Features:
 - unary operations: '-'
