@@ -92,8 +92,7 @@ public class RunExpSolver {
             return new ConstantExpression(root.token.value);
         }
         if (verbose) {
-            System.out.println("simplified: "+root.toStringExpression());
-            System.out.println(RunExp.ast2Str(root.nodes, 0));
+            System.out.println("parsed as: "+root.toStringExpression());
         }
 
         if (allowJVM) {

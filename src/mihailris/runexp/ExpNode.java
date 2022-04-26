@@ -50,9 +50,11 @@ public class ExpNode {
             StringBuilder text = new StringBuilder();
             if (command != null){
                 if (command.tag == Token.Tag.OPERATOR){
+                    text.append('(');
                     text.append(nodes.get(0).toStringExpression());
-                    text.append(' ').append(command.value).append(' ');
+                    text.append(' ').append(command.string).append(' ');
                     text.append(nodes.get(1).toStringExpression());
+                    text.append(')');
                     return text.toString();
                 } else if (command.tag == Token.Tag.FUNCTION){
                     text.append(command.string);
