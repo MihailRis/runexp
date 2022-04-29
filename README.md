@@ -5,7 +5,7 @@ A lightweight runtime math expressions solver/compiler for JVM.
 - writes JVM bytecode
 - aimed to reuse compiled expressions
 
-# Usage:
+## Usage:
 
 with x:
 ```java
@@ -43,7 +43,7 @@ float value = solver.eval(expressionString);
 solver.allowJVM - allow compiling expressions directly into JVM bytecode (true by default)
 
 
-# Custom constants:
+## Custom constants:
 Method: 
 ```java
 RunExpSolver.addConstant(String name, float value);
@@ -55,7 +55,7 @@ solver.addConstant("g", 9.8f);
 ```
 
 
-# Custom functions:
+## Custom functions:
 Methods: 
 ```java
 RunExpSolver.addFunction(String name, Class<?> class, String methodName);
@@ -76,7 +76,7 @@ try {
 ``` 
 
 
-# Features:
+## Features:
 - unary operations: '-'
 - binary operations: '+', '-', '*', '/' and '^' (exponentation)
 - functions:
@@ -96,12 +96,3 @@ try {
   - degrad (Math.PI / 180.0) usage: radians = degreen * degrad
 - custom constants
 - custom functions (directly calling static methods as functions)
-# Examples:
-```java
-try {
-  int width = (int)RunExp.eval(widthField.getText());
-  // ...
-} catch (ExpCompileException e){
-  invalidInputMessage(e.message);
-}
-```
