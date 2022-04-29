@@ -1,5 +1,5 @@
 # RunExp <sub>v1.0</sub>
-A lightweight math expressions solver/compiler for JVM.
+A lightweight runtime math expressions solver/compiler for JVM.
 - does not use any scripting engine
 - uses java reflection
 - writes JVM bytecode
