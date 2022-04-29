@@ -40,7 +40,8 @@ float value = solver.eval(expressionString);
 - Add custom function (example): 
 ```java 
 try {
-  solver.addFunction("noise", 2, Noise.class, "noise2d", false);
+  // adding Noise.noise2d(float, float) method (for example)
+  solver.addFunction("noise", Noise.class, "noise2d", class.float, class.float);
 } catch (NoSuchMethodException e){
   ...
 }
