@@ -11,35 +11,46 @@ public class RunExpFunction {
     String className;
     String methodName;
     String argsFormat;
-    boolean isDouble;
-    ReturnType returns;
+    RunExpReflection.Type returns;
 
     Class<?>[] argsClasses;
     Class<?> klass;
     Method method;
 
-    public RunExpFunction(String name, int argCount, Class<?> klass, String methodName, boolean isDouble) throws NoSuchMethodException {
-        this(name, argCount, klass, methodName, isDouble, false);
+    RunExpFunction(String name, Class<?> klass, String methodName, Class<?>[] args) throws NoSuchMethodException {
+        this(name, klass, methodName, args, false);
     }
 
-    RunExpFunction(String name, int argCount, Class<?> klass, String methodName, boolean isDouble, boolean isBuiltin) throws NoSuchMethodException {
+    RunExpFunction(String name, Class<?> klass, String methodName, Class<?>[] args, boolean isBuiltin) throws NoSuchMethodException {
+        if (args == null){
+            Method[] methods = klass.getMethods();
+            Method methodFound = null;
+            for (Method method : methods){
+                if (method.getName().equals(methodName)){
+                    if (methodFound != null)
+                        throw new NoSuchMethodException("method '"+method+"' has overloads, use other constructor");
+                    methodFound = method;
+                }
+            }
+            if (methodFound == null)
+                throw new NoSuchMethodException(klass+" has no suitable '"+methodName+"' method");
+            args = methodFound.getParameterTypes();
+        }
+        final int argCount = args.length;
+        argsClasses = args;
+
         this.name = name;
         this.argCount = argCount;
         this.className = klass.getName();
         this.methodName = methodName;
-        this.isDouble = isDouble;
         this.isBuiltin = isBuiltin;
 
-        argsClasses = new Class<?>[argCount];
         StringBuilder format = new StringBuilder("(");
-        for (int i = 0; i < argCount; i++) {
-            if (isDouble){
-                format.append('D');
-                argsClasses[i] = double.class;
-            } else {
-                format.append('F');
-                argsClasses[i] = float.class;
-            }
+        for (Class<?> arg : args) {
+            RunExpReflection.Type argType = RunExpReflection.getValueType(arg);
+            if (argType == null)
+                throw new IllegalArgumentException("unsupported argument type " + arg);
+            format.append(argType.signature);
         }
         format.append(')');
 
@@ -50,10 +61,10 @@ public class RunExpFunction {
         if (returnType.isArray()){
             throw new IllegalArgumentException("method '"+methodName+"' returns an array");
         }
-        for (ReturnType type : ReturnType.values()){
+        for (RunExpReflection.Type type : RunExpReflection.Type.values()){
             if (returnType.equals(type.klass)){
                 returns = type;
-                format.append(type.notation);
+                format.append(type.signature);
                 break;
             }
         }
@@ -63,19 +74,5 @@ public class RunExpFunction {
         this.argsFormat = format.toString();
     }
 
-    enum ReturnType {
-        FLOAT(float.class, "F"),
-        DOUBLE(double.class, "D"),
-        CHAR(char.class, "I"),
-        SHORT(short.class, "I"),
-        INT(int.class, "I"),
-        LONG(long.class, "J"),
-        ;
-        Class<?> klass;
-        String notation;
-        ReturnType(Class<?> klass, String notation){
-            this.klass = klass;
-            this.notation = notation;
-        }
-    }
+
 }

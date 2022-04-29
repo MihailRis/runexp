@@ -113,11 +113,20 @@ public class JvmCompiler {
             String name = node.command.string;
             RunExpFunction function = solver.functions.get(name);
 
-            boolean doubleFunc = function.isDouble;
-            for (ExpNode subnode : node.nodes){
+            for (int i = 0; i < node.nodes.size(); i++){
+                ExpNode subnode = node.get(i);
                 compile(subnode, mv);
-                if (doubleFunc)
-                    mv.visitInsn(F2D);
+                RunExpReflection.Type type = RunExpReflection.getValueType(function.argsClasses[i]);
+                assert (type != null);
+
+                switch (type){
+                    case FLOAT: break;
+                    case DOUBLE: mv.visitInsn(F2D); break;
+                    case INT: mv.visitInsn(F2I); break;
+                    case LONG: mv.visitInsn(F2L); break;
+                    default:
+                        throw new IllegalStateException(type.name());
+                }
             }
 
             mv.visitMethodInsn(INVOKESTATIC, function.className.replaceAll("\\.", "/"), function.methodName, function.argsFormat, false);

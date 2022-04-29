@@ -35,29 +35,32 @@ public class RunExp {
         try {
             // declaring built-in functions
             // every built-in function must be added to switch in RunExp.callBuiltinFunc method
-            builtinFunctions.put("abs", new RunExpFunction("abs", 1, Math.class, "abs", false, true));
-            builtinFunctions.put("sin", new RunExpFunction("sin", 1, Math.class, "sin", true, true));
-            builtinFunctions.put("cos", new RunExpFunction("cos", 1, Math.class, "cos", true, true));
-            builtinFunctions.put("tan", new RunExpFunction("tan", 1, Math.class, "tan", true, true));
-            builtinFunctions.put("exp", new RunExpFunction("exp", 1, Math.class, "exp", true, true));
-            builtinFunctions.put("sqrt", new RunExpFunction("sqrt", 1, Math.class, "sqrt", true, true));
-            builtinFunctions.put("pow", new RunExpFunction("pow", 2, Math.class, "pow", true, true));
-            builtinFunctions.put("sign", new RunExpFunction("sign", 1, Math.class, "signum", false, true));
+            addBuiltin("abs", Math.class, "abs", float.class);
+            addBuiltin("sin", Math.class, "sin", double.class);
+            addBuiltin("cos", Math.class, "cos", double.class);
+            addBuiltin("tan", Math.class, "tan", double.class);
+            addBuiltin("exp", Math.class, "exp", double.class);
+            addBuiltin("sqrt", Math.class, "sqrt", double.class);
+            addBuiltin("pow", Math.class, "pow", double.class, double.class);
+            addBuiltin("sign", Math.class, "signum", float.class);
             builtinFunctions.put("signum", builtinFunctions.get("sign"));
-            builtinFunctions.put("min", new RunExpFunction("min", 2, Math.class, "min", false, true));
-            builtinFunctions.put("max", new RunExpFunction("max", 2, Math.class, "max", false, true));
+            addBuiltin("min", Math.class, "min", float.class, float.class);
+            addBuiltin("max", Math.class, "max", float.class, float.class);
+            addBuiltin("round", Math.class, "round", double.class);
+            addBuiltin("floor", Math.class, "floor", double.class);
+            addBuiltin("ceil", Math.class, "ceil", double.class);
 
-            builtinFunctions.put("round", new RunExpFunction("round", 1, Math.class, "round", true, true));
-            builtinFunctions.put("floor", new RunExpFunction("floor", 1, Math.class, "floor", true, true));
-            builtinFunctions.put("ceil", new RunExpFunction("ceil", 1, Math.class, "ceil", true, true));
-
-            builtinFunctions.put("rand", new RunExpFunction("rand", 1, ExpMaths.class, "rand", false, true));
-            builtinFunctions.put("smoother", new RunExpFunction("smoother", 1, ExpMaths.class, "smoother", false, true));
+            addBuiltin("rand", ExpMaths.class, "rand", float.class);
+            addBuiltin("smoother", ExpMaths.class, "smoother", float.class);
         }
         catch (NoSuchMethodException e){
             throw new RuntimeException(e);
         }
         solver = new RunExpSolver();
+    }
+
+    private static void addBuiltin(String name, Class<?> klass, String methodName, Class<?>... args) throws NoSuchMethodException {
+        builtinFunctions.put(name, new RunExpFunction(name, klass, methodName, args, true));
     }
 
     /**

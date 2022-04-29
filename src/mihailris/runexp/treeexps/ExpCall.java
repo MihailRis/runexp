@@ -1,8 +1,8 @@
 package mihailris.runexp.treeexps;
 
 import mihailris.runexp.Expression;
-import mihailris.runexp.Parser;
 import mihailris.runexp.RunExpFunction;
+import mihailris.runexp.RunExpReflection;
 
 public class ExpCall implements Expression {
     private final RunExpFunction function;
@@ -20,6 +20,6 @@ public class ExpCall implements Expression {
         for (int i = 0; i < args.length; i++) {
             values[i] = args[i].eval(x);
         }
-        return Parser.callFunc(function, values, 0, values.length);
+        return RunExpReflection.callFunc(function, values, 0, values.length);
     }
 }

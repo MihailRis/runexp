@@ -1,11 +1,11 @@
 package mihailris.runexp;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
 import static mihailris.runexp.ExpConstants.*;
+import static mihailris.runexp.RunExpReflection.callFunc;
+import static mihailris.runexp.RunExpReflection.performOperation;
 
 public class Parser {
     private static final String[] BINARY_OPS_GROUPS = new String[]{
@@ -276,43 +276,6 @@ public class Parser {
                 continue;
             }
             nodes.add(node);
-        }
-    }
-
-    private static float performOperation(float a, float b, String op){
-        switch (op) {
-            case "*": return a * b;
-            case "^": return  (float) Math.pow(a, b);
-            case "/": return a / b;
-            case "%": return a % b;
-            case "+": return a + b;
-            case "-": return a - b;
-            default:
-                throw new IllegalStateException();
-        }
-    }
-
-    public static float callFunc(RunExpFunction function, float[] args, int offset, int argc){
-        if (function.isBuiltin)
-            return RunExp.callBuiltinFunc(function.name, args);
-
-        // anyway java reflection is a lot of pain for GC
-        try {
-            Method method = function.method;
-            Object[] values = new Object[argc];
-            if (function.isDouble){
-                for (int i = 0; i < argc; i++) {
-                    values[i] = (double)args[offset+i];
-                }
-                return (float) (double) method.invoke(null, values);
-            } else {
-                for (int i = 0; i < argc; i++) {
-                    values[i] = args[offset+i];
-                }
-                return (float) method.invoke(null, values);
-            }
-        } catch (InvocationTargetException | IllegalAccessException e) {
-            throw new RuntimeException(e);
         }
     }
 
