@@ -80,6 +80,12 @@ try {
 // see RunExpSolver.addFunction docs for more info
 ``` 
 
+Built-in functions may be overriden.
+Example:
+```java
+solver.addFunction("rand", MathUtils.class, "random");
+```
+
 
 ## Features:
 - unary operations: '-'
