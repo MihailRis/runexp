@@ -81,8 +81,10 @@ try {
 ``` 
 
 Built-in functions may be overriden.
+
 Example:
 ```java
+// override built-in 'rand' with some MathUtils.random method
 solver.addFunction("rand", MathUtils.class, "random");
 ```
 
