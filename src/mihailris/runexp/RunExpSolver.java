@@ -13,7 +13,14 @@ public class RunExpSolver {
     private final Parser parser;
     private final Compiler compiler;
     private final JvmCompiler jvmCompiler;
+    /**
+     * allow RunExp compile expressions into JVM-bytecode for the best performance<br>
+     * not used for constant expressions (with no X)
+     */
     public boolean allowJVM = true;
+    /**
+     * print debug information such as look of parsed expression
+     */
     public boolean verbose = false;
     Map<String, Float> constants;
     Map<String, RunExpFunction> functions;

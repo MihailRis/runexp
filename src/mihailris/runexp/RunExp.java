@@ -4,18 +4,11 @@ import java.util.*;
 
 /**
  * Created by MihailRis 10th April 2021
- * TODO:
- * - add double support
- * - add functions (expressions with multiple input values)
+ * GitHub Repository: https://github.com/MihailRis/runexp
  */
 public class RunExp {
     public static final String VERSION_STRING = "1.0";
     public static final int VERSION = 1;
-    /**
-     * allow RunExp compile expressions into JVM-bytecode for the best performance<br>
-     * not used for constant expressions (with no X)
-     */
-
 
     static Map<String, Float> builtinConstants = new HashMap<>();
     static Map<String, RunExpFunction> builtinFunctions = new HashMap<>();
@@ -59,32 +52,6 @@ public class RunExp {
         solver = new RunExpSolver();
     }
 
-    private static void addBuiltin(String name, Class<?> klass, String methodName, Class<?>... args) throws NoSuchMethodException {
-        builtinFunctions.put(name, new RunExpFunction(name, klass, methodName, args, true));
-    }
-
-    /**
-     * @param expressionString target expression string
-     * @return calculated constant value for given expression
-     * @throws ExpCompileException when an error ocurred during expression parsing
-     */
-    public static float eval(String expressionString) throws ExpCompileException {
-        return solver.eval(expressionString);
-    }
-
-    /**
-     * @param expressionString target expression string
-     * @return expression
-     * @throws ExpCompileException when an error ocurred during expression parsing
-     */
-    public static Expression compile(String expressionString) throws ExpCompileException {
-        return solver.compile(expressionString);
-    }
-
-    public static ConstantExpression compileConstant(String code) throws ExpCompileException {
-        return (ConstantExpression) solver.compile(code, true);
-    }
-
     /**
      * Created to avoid java-reflection GC-hell if no one custom function used when RunExp.allowJVM is false
      * @param name function name
@@ -113,6 +80,38 @@ public class RunExp {
         throw new IllegalStateException();
     }
 
+    private static void addBuiltin(String name, Class<?> klass, String methodName, Class<?>... args) throws NoSuchMethodException {
+        builtinFunctions.put(name, new RunExpFunction(name, klass, methodName, args, true));
+    }
+
+    /**
+     * @param expressionString target expression string
+     * @return calculated constant value for given expression
+     * @throws ExpCompileException when an error ocurred during expression parsing
+     */
+    public static float eval(String expressionString) throws ExpCompileException {
+        return solver.eval(expressionString);
+    }
+
+    /**
+     * @param expressionString target expression string
+     * @return expression
+     * @throws ExpCompileException when an error ocurred during expression parsing
+     */
+    public static Expression compile(String expressionString) throws ExpCompileException {
+        return solver.compile(expressionString);
+    }
+
+    public static ConstantExpression compileConstant(String code) throws ExpCompileException {
+        return (ConstantExpression) solver.compile(code, true);
+    }
+
+    /**
+     * Internal debug method for visualize parsed syntax tree of ExpNode
+     * @param nodes subnodes of root node (any node with subnodes)
+     * @param indent root node indentation in resulting string
+     * @return text visualization of parsed syntax tree
+     */
     static String ast2Str(List<ExpNode> nodes, int indent){
         StringBuilder builder = new StringBuilder();
         for (ExpNode node : nodes){

@@ -11,6 +11,7 @@ public class ExpConstants {
     public static final int ERR_WRONG_ARGS_COUNT = 8;
     public static final int ERR_UNEXPECTED_TOKEN = 9;
     public static final int ERR_UNKNOWN_UNARY = 10;
+    public static final int ERR_MULTIPLE_RESULT_VALUES = 11;
     public static final String POW_OP = "^";
     public static final String UNARY_PLUS = "+";
 }

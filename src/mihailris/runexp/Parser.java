@@ -112,13 +112,11 @@ public class Parser {
         if (solver.verbose)
             System.out.println("runexp: simplified in "+iterations+" iterations");
 
-        ExpNode root;
-        if (nodes.size() == 1){
-            root = nodes.get(0);
-        } else {
-            root = new ExpNode(nodes);
-        }
-        return root;
+        assert (nodes.size() > 0);
+        if (nodes.size() > 1)
+            throw new ExpCompileException("multiple result values (not supported)", 0, ERR_MULTIPLE_RESULT_VALUES);
+
+        return nodes.get(0);
     }
 
     private int parseBlocks(List<ExpNode> source, List<ExpNode> nodes, int index, boolean closeable) throws ExpCompileException {
