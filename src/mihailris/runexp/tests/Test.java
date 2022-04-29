@@ -37,7 +37,6 @@ public class Test {
                     float result = expression.eval(arg);
                     System.out.println("-> "+result);
                 }
-                System.out.println(RunExp.compile(expr).eval(1));
             } catch (ExpCompileException e) {
                 System.out.println(e.message+" at " +e.pos + " ["+e.errorCode+"]");
             }

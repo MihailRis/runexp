@@ -36,6 +36,10 @@ public class ExpNode {
         return nodes.get(index);
     }
 
+    public boolean isValue() {
+        return token == null || token.tag != Token.Tag.OPERATOR;
+    }
+
     /**
      * @return reconstructed expression string
      */

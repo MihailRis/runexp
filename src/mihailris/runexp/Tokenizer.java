@@ -21,30 +21,35 @@ public class Tokenizer {
 
             if (c == ' ' || c == '\t' || c == '\r'){
                 flush();
+                continue;
             }
             if (c == ','){
                 flush();
                 tag = RawToken.Tag.SEPARATOR;
                 put(c);
                 flush();
+                continue;
             }
             if (c == '('){
                 flush();
                 tag = RawToken.Tag.OPEN;
                 put(c);
                 flush();
+                continue;
             }
             if (c == ')'){
                 flush();
                 tag = RawToken.Tag.CLOSE;
                 put(c);
                 flush();
+                continue;
             }
             if (c == '+' || c == '-' || c == '*' || c == '/' || c == '^' || c == '%'){
                 flush();
                 tag = RawToken.Tag.OPERATOR;
                 put(c);
                 flush();
+                continue;
             }
 
             switch (tag){
@@ -55,20 +60,13 @@ public class Tokenizer {
                     } else if (Character.isDigit(c)){
                         tag = RawToken.Tag.NUMBER;
                         put(c);
-                    } else if (c == '-'){
-                        tag = RawToken.Tag.OPERATOR;
-                        put(c);
-                        flush();
-                    } else if (c == '+'){
-                        // does nothing, added for '+'/'-' symmetry
-                        break;
                     } else {
                         throw new ExpCompileException("unexpected '"+c+"'", lpos, ExpConstants.ERR_UNEXPECTED_TOKEN);
                     }
                     break;
                 }
                 case NAME: {
-                    if (Character.isAlphabetic(c) || Character.isDigit(c) || c == '_' || c == '-'){
+                    if (Character.isAlphabetic(c) || Character.isDigit(c) || c == '_'){
                         put(c);
                     } else {
                         throw new ExpCompileException(builder.toString()+c, lpos, ExpConstants.ERR_INVALID_IDENTIFIER);

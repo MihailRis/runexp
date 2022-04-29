@@ -13,10 +13,16 @@ public class Parser {
         "*/%",
         "+-",
     };
+    private static final String UNARY_OPS = "-+";
+
     final RunExpSolver solver;
 
     Parser(RunExpSolver solver) {
         this.solver = solver;
+    }
+
+    private boolean isUnary(String operator){
+        return UNARY_OPS.contains(operator);
     }
 
     public List<ExpNode> performRawTokens(List<RawToken> tokens, boolean constant) throws ExpCompileException {
@@ -195,7 +201,7 @@ public class Parser {
         }
     }
 
-    private void parseUnary(List<ExpNode> source, List<ExpNode> nodes){
+    private void parseUnary(List<ExpNode> source, List<ExpNode> nodes) throws ExpCompileException {
         for (int index = 0; index < source.size(); index++) {
             ExpNode node = source.get(index);
             if (node.token == null){
@@ -206,14 +212,32 @@ public class Parser {
             } else if (node.token.tag == Token.Tag.OPERATOR){
                 ExpNode next = source.get(index+1);
                 if (nodes.isEmpty()){
+                    if (!next.isValue()){
+                        throw new ExpCompileException("invalid operator use", node.token.pos, ERR_UNEXPECTED_TOKEN);
+                    }
                     List<ExpNode> out = new ArrayList<>();
+                    if (!next.nodes.isEmpty()) {
+                        parseUnary(next.nodes, out);
+                        next = new ExpNode(next.command,out);
+                        out = new ArrayList<>();
+                    }
                     out.add(next);
+                    if (node.token.string.equals(UNARY_PLUS)){
+                        nodes.add(out.get(0));
+                        index++;
+                        continue;
+                    }
                     nodes.add(new ExpNode(node.token, out));
                     index++;
                     continue;
                 }
+
                 ExpNode prev = nodes.get(nodes.size()-1);
-                if (prev.token != null && prev.token.tag == Token.Tag.OPERATOR){
+                if (prev.token != null && prev.token.tag == Token.Tag.OPERATOR) {
+                    if (!isUnary(prev.token.string)) {
+                        throw new ExpCompileException("unknown unary operator '"+prev.token.string+"'",
+                                prev.token.pos, ERR_UNKNOWN_UNARY);
+                    }
                     List<ExpNode> out = new ArrayList<>();
                     out.add(next);
                     nodes.add(new ExpNode(node.token, out));
@@ -324,8 +348,12 @@ public class Parser {
                         continue;
                     } else if (subnode.token == null) {
                         List<ExpNode> out = new ArrayList<>();
-                        simplify(subnode.nodes, out);
-                        nodes.add(new ExpNode(subnode.command, out));
+                        if (subnode.command == null) {
+                            simplify(subnode.nodes, out);
+                        } else {
+                            simplify(node.nodes, out);
+                        }
+                        nodes.add(new ExpNode(node.command, out));
                         changed = true;
                         continue;
                     }
