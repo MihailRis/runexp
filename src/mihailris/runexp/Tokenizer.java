@@ -55,6 +55,15 @@ public class Tokenizer {
                     } else if (Character.isDigit(c)){
                         tag = RawToken.Tag.NUMBER;
                         put(c);
+                    } else if (c == '-'){
+                        tag = RawToken.Tag.OPERATOR;
+                        put(c);
+                        flush();
+                    } else if (c == '+'){
+                        // does nothing, added for '+'/'-' symmetry
+                        break;
+                    } else {
+                        throw new ExpCompileException("unexpected '"+c+"'", lpos, ExpConstants.ERR_UNEXPECTED_TOKEN);
                     }
                     break;
                 }
@@ -96,11 +105,6 @@ public class Tokenizer {
             builder = null;
         }
         tag = RawToken.Tag.UNDEFINED;
-    }
-
-    private void putEmpty(){
-        if (builder == null)
-            builder = new StringBuilder();
     }
 
     private void put(char c) {

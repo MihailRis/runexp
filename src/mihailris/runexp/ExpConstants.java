@@ -9,5 +9,6 @@ public class ExpConstants {
     public static final int ERR_EMPTY_EXPRESSION = 6;
     public static final int ERR_UNKNOWN_FUNCTION = 7;
     public static final int ERR_WRONG_ARGS_COUNT = 8;
+    public static final int ERR_UNEXPECTED_TOKEN = 9;
     public static final String POW_OP = "^";
 }
