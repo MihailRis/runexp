@@ -41,6 +41,8 @@ float value = solver.eval(expressionString);
 ```java 
 try {
   // adding Noise.noise2d(float, float) static method as function 'noise'
+  solver.addFunction("noise", Noise.class, "noise2d");
+  // if Noise.noise is overloaded
   solver.addFunction("noise", Noise.class, "noise2d", class.float, class.float);
 } catch (NoSuchMethodException e){
   ...

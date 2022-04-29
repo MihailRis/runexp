@@ -55,10 +55,22 @@ public class RunExpSolver {
      * @param name name of function in expressions
      * @param sourceClass class that contains target method
      * @param methodName name of method that will be called as function
+     * @param args arguments classes used to choose correct method overload
      * @throws NoSuchMethodException will be trown if there's no such method at given class
      */
     public void addFunction(String name, Class<?> sourceClass, String methodName, Class<?>... args) throws NoSuchMethodException {
         functions.put(name, new RunExpFunction(name, sourceClass, methodName, args));
+    }
+
+    /**
+     * Use other method overload if target method has overloads
+     * @param name name of function in expressions
+     * @param sourceClass class that contains target method
+     * @param methodName name of method that will be called as function
+     * @throws NoSuchMethodException will be trown if there's no such method at given class
+     */
+    public void addFunction(String name, Class<?> sourceClass, String methodName) throws NoSuchMethodException {
+        functions.put(name, new RunExpFunction(name, sourceClass, methodName, null));
     }
 
     public void addXAlias(String alias){
