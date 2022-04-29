@@ -210,6 +210,8 @@ public class Parser {
                 nodes.add(new ExpNode(node.command, out));
                 continue;
             } else if (node.token.tag == Token.Tag.OPERATOR){
+                if (source.size() <= index + 1)
+                    throw new ExpCompileException("invalid operator use", node.token.pos, ERR_UNEXPECTED_TOKEN);
                 ExpNode next = source.get(index+1);
                 if (nodes.isEmpty()){
                     if (!next.isValue()){
