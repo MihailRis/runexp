@@ -27,7 +27,7 @@ if Expression wrapper needed (ConstantExpression used):
 ConstantExpression expression = RunExp.compileConstant("pi ^ 2");
 ```
 
-### Setting up:
+### Solvers:
 RunExp class uses RunExpSolver instance available as `RunExp.solver`, but it's preferred
 to create new one.
 ```java
@@ -36,8 +36,28 @@ solver.addConstant("g", 9.8f);
 ...
 float value = solver.eval(expressionString);
 ```
-- Add custom constant: `solver.addConstant(name, value)`
-- Add custom function (example): 
+solver.allowJVM - allow compiling expressions directly into JVM bytecode (true by default)
+
+
+### Custom Constants:
+Method: 
+```java
+RunExpSolver.addConstant(String name, float value);
+```
+
+Example: 
+```java
+solver.addConstant("g", 9.8f);
+```
+
+
+### Custom Function:
+Method: 
+```java
+RunExpSolver.addFunction(String name, Class<?> class, String methodName, Class<?>... args);
+```
+
+Example:
 ```java 
 try {
   // adding Noise.noise2d(float, float) static method as function 'noise'
@@ -49,7 +69,7 @@ try {
 }
 // see RunExpSolver.addFunction docs for more info
 ``` 
-- `solver.allowJVM` setting - allow compiling expressions directly into JVM bytecode (true by default)
+
 
 # Features:
 - unary operations: '-'
