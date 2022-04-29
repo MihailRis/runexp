@@ -5,6 +5,10 @@ A lightweight runtime math expressions solver/compiler for JVM.
 - writes JVM bytecode
 - aimed to reuse compiled expressions
 
+Future:
+- integer expressions, bitwise operations
+- double precision expressions
+
 ## Usage:
 
 with x:
