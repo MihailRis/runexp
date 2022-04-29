@@ -52,8 +52,9 @@ solver.addConstant("g", 9.8f);
 
 
 # Custom functions:
-Method: 
+Methods: 
 ```java
+RunExpSolver.addFunction(String name, Class<?> class, String methodName);
 RunExpSolver.addFunction(String name, Class<?> class, String methodName, Class<?>... args);
 ```
 
