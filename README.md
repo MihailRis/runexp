@@ -53,14 +53,10 @@ try {
 - binary operations: '+', '-', '*', '/' and '^' (exponentation)
 - functions:
   - abs
-  - sin
-  - cos
-  - tan
-  - exp
-  - sqrt
-  - pow (same as '^' operator)
-  - min(a, b)
-  - max(a, b)
+  - sin, cos, tan
+  - sqrt, exp, pow (same as '^' operator)
+  - min(a, b), max(a, b)
+  - round, floor, ceil
   - sign / signum
   - rand - random number in range `[0.0, 1.0]`
   - smoother (smoother step)

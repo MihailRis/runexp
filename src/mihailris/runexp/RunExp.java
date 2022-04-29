@@ -46,6 +46,11 @@ public class RunExp {
             builtinFunctions.put("signum", builtinFunctions.get("sign"));
             builtinFunctions.put("min", new RunExpFunction("min", 2, Math.class, "min", false, true));
             builtinFunctions.put("max", new RunExpFunction("max", 2, Math.class, "max", false, true));
+
+            builtinFunctions.put("round", new RunExpFunction("round", 1, ExpMaths.class, "round", false, true));
+            builtinFunctions.put("floor", new RunExpFunction("floor", 1, Math.class, "floor", true, true));
+            builtinFunctions.put("ceil", new RunExpFunction("ceil", 1, Math.class, "ceil", true, true));
+
             builtinFunctions.put("rand", new RunExpFunction("rand", 1, ExpMaths.class, "rand", false, true));
             builtinFunctions.put("smoother", new RunExpFunction("smoother", 1, ExpMaths.class, "smoother", false, true));
         }
@@ -96,6 +101,9 @@ public class RunExp {
             case "signum": return Math.signum(args[0]);
             case "min": return Math.min(args[0], args[1]);
             case "max": return Math.max(args[0], args[1]);
+            case "round": return Math.round(args[0]);
+            case "floor": return (float) Math.floor(args[0]);
+            case "ceil": return (float) Math.ceil(args[0]);
             case "rand": return ExpMaths.rand(args[0]);
             case "smoother": return ExpMaths.smoother(args[0]);
         }
