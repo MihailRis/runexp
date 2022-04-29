@@ -39,7 +39,7 @@ float value = solver.eval(expressionString);
 solver.allowJVM - allow compiling expressions directly into JVM bytecode (true by default)
 
 
-# Custom Constants:
+# Custom constants:
 Method: 
 ```java
 RunExpSolver.addConstant(String name, float value);
@@ -51,7 +51,7 @@ solver.addConstant("g", 9.8f);
 ```
 
 
-# Custom Function:
+# Custom functions:
 Method: 
 ```java
 RunExpSolver.addFunction(String name, Class<?> class, String methodName, Class<?>... args);
