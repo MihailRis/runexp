@@ -5,6 +5,9 @@ import java.util.*;
 /**
  * Created by MihailRis 10th April 2021
  * GitHub Repository: https://github.com/MihailRis/runexp
+ *
+ * Notes:
+ * - any function call with no variable parameters passed is interpreting as constant value
  */
 public class RunExp {
     public static final String VERSION_STRING = "1.0";
