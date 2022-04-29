@@ -47,7 +47,7 @@ public class RunExp {
             builtinFunctions.put("min", new RunExpFunction("min", 2, Math.class, "min", false, true));
             builtinFunctions.put("max", new RunExpFunction("max", 2, Math.class, "max", false, true));
 
-            builtinFunctions.put("round", new RunExpFunction("round", 1, ExpMaths.class, "round", false, true));
+            builtinFunctions.put("round", new RunExpFunction("round", 1, Math.class, "round", true, true));
             builtinFunctions.put("floor", new RunExpFunction("floor", 1, Math.class, "floor", true, true));
             builtinFunctions.put("ceil", new RunExpFunction("ceil", 1, Math.class, "ceil", true, true));
 

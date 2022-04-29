@@ -121,8 +121,15 @@ public class JvmCompiler {
             }
 
             mv.visitMethodInsn(INVOKESTATIC, function.className.replaceAll("\\.", "/"), function.methodName, function.argsFormat, false);
-            if (doubleFunc)
-                mv.visitInsn(D2F);
+
+            switch (function.returns){
+                case FLOAT: break;
+                case DOUBLE: mv.visitInsn(D2F); break;
+                case CHAR:
+                case SHORT:
+                case INT: mv.visitInsn(I2F); break;
+                case LONG: mv.visitInsn(L2F); break;
+            }
         }
         if (node.token != null && node.token.tag == Token.Tag.VARIABLE){
             mv.visitVarInsn(FLOAD, 1);

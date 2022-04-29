@@ -12,6 +12,7 @@ public class RunExpFunction {
     String methodName;
     String argsFormat;
     boolean isDouble;
+    ReturnType returns;
 
     Class<?>[] argsClasses;
     Class<?> klass;
@@ -40,13 +41,41 @@ public class RunExpFunction {
                 argsClasses[i] = float.class;
             }
         }
-        if (isDouble)
-            format.append(")D");
-        else
-            format.append(")F");
-        this.argsFormat = format.toString();
+        format.append(')');
 
         this.klass = klass;
         this.method = klass.getMethod(methodName, argsClasses);
+
+        Class<?> returnType = method.getReturnType();
+        if (returnType.isArray()){
+            throw new IllegalArgumentException("method '"+methodName+"' returns an array");
+        }
+        for (ReturnType type : ReturnType.values()){
+            if (returnType.equals(type.klass)){
+                returns = type;
+                format.append(type.notation);
+                break;
+            }
+        }
+        if (returns == null){
+            throw new IllegalArgumentException("unsupported return type '"+returnType+"'");
+        }
+        this.argsFormat = format.toString();
+    }
+
+    enum ReturnType {
+        FLOAT(float.class, "F"),
+        DOUBLE(double.class, "D"),
+        CHAR(char.class, "I"),
+        SHORT(short.class, "I"),
+        INT(int.class, "I"),
+        LONG(long.class, "J"),
+        ;
+        Class<?> klass;
+        String notation;
+        ReturnType(Class<?> klass, String notation){
+            this.klass = klass;
+            this.notation = notation;
+        }
     }
 }
