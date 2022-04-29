@@ -3,7 +3,7 @@ package mihailris.runexp.treeexps;
 import mihailris.runexp.Expression;
 
 public class ExpUnaryOperator implements Expression {
-    Expression a;
+    final Expression a;
 
     public ExpUnaryOperator(Expression a) {
         this.a = a;

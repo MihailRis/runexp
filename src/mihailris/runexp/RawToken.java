@@ -1,9 +1,9 @@
 package mihailris.runexp;
 
 class RawToken {
-    Tag tag;
-    String text;
-    int pos;
+    final Tag tag;
+    final String text;
+    final int pos;
 
     RawToken(Tag tag, String text, int pos){
         this.tag = tag;

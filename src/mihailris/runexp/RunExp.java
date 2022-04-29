@@ -10,10 +10,10 @@ public class RunExp {
     public static final String VERSION_STRING = "1.0";
     public static final int VERSION = 1;
 
-    static Map<String, Float> builtinConstants = new HashMap<>();
-    static Map<String, RunExpFunction> builtinFunctions = new HashMap<>();
-    static Set<String> builtinXAliases = new HashSet<>();
-    public static RunExpSolver solver;
+    static final Map<String, Float> builtinConstants = new HashMap<>();
+    static final Map<String, RunExpFunction> builtinFunctions = new HashMap<>();
+    static final Set<String> builtinXAliases = new HashSet<>();
+    public static final RunExpSolver solver;
 
     static {
         for (char c = 'a'; c <= 'z'; c++) {

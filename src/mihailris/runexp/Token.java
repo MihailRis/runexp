@@ -4,7 +4,7 @@ public class Token {
     Tag tag;
     float value;
     String string;
-    int pos;
+    final int pos;
 
     public Token(Tag tag, String string, int pos) {
         this.tag = tag;

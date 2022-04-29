@@ -22,9 +22,9 @@ public class RunExpSolver {
      * print debug information such as look of parsed expression
      */
     public boolean verbose = false;
-    Map<String, Float> constants;
-    Map<String, RunExpFunction> functions;
-    Set<String> xAliases;
+    final Map<String, Float> constants;
+    final Map<String, RunExpFunction> functions;
+    final Set<String> xAliases;
 
     public RunExpSolver(){
         this.tokenizer = new Tokenizer();

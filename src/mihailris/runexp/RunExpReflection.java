@@ -76,8 +76,8 @@ public class RunExpReflection {
         INT(int.class, "I"),
         LONG(long.class, "J"),
         ;
-        Class<?> klass;
-        String signature;
+        final Class<?> klass;
+        final String signature;
         Type(Class<?> klass, String signature){
             this.klass = klass;
             this.signature = signature;

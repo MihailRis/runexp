@@ -3,9 +3,9 @@ package mihailris.runexp.treeexps;
 import mihailris.runexp.Expression;
 
 public class ExpBinaryOperator implements Expression {
-    Expression a;
-    Expression b;
-    char operator;
+    final Expression a;
+    final Expression b;
+    final char operator;
 
     public ExpBinaryOperator(Expression a, Expression b, char operator) {
         this.a = a;
