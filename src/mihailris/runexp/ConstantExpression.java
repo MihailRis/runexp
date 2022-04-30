@@ -1,5 +1,8 @@
 package mihailris.runexp;
 
+/**
+ * Expression wrapper for compiled constant expressions with float value as result
+ */
 public class ConstantExpression implements Expression {
     private final float value;
 

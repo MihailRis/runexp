@@ -1,5 +1,8 @@
 package mihailris.runexp;
 
+/**
+ * Text token produced by Tokenizer
+ */
 class RawToken {
     final Tag tag;
     final String text;

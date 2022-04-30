@@ -14,6 +14,10 @@ public class RunExp {
     public static final int VERSION = 1;
 
     static final Map<String, Float> builtinConstants = new HashMap<>();
+    /**
+     * Every RunExpSolver inherits kit of functions from builtinFunctions
+     * Every function in RunExpSolver may be overriden with addFunction with same function name
+     */
     static final Map<String, RunExpFunction> builtinFunctions = new HashMap<>();
     static final Set<String> builtinXAliases = new HashSet<>();
     public static final RunExpSolver solver;

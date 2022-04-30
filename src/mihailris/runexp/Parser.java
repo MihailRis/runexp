@@ -66,7 +66,7 @@ public class Parser {
                 }
                 case OPEN: token = new Token(Token.Tag.OPEN, rawToken.pos); break;
                 case CLOSE: token = new Token(Token.Tag.CLOSE, rawToken.pos); break;
-                case SEPARATOR: token = new Token(Token.Tag.SEPARATOR, rawToken.pos); break;
+                case SEPARATOR: token = new Token(Token.Tag.COMMA, rawToken.pos); break;
                 default:
                     throw new IllegalStateException();
             }
@@ -167,7 +167,7 @@ public class Parser {
     private void parseArguments(List<ExpNode> source, List<ExpNode> nodes, boolean call) throws ExpCompileException {
         List<ExpNode> argument = new ArrayList<>();
         for (ExpNode node : source) {
-            if (node.token != null && node.token.tag == Token.Tag.SEPARATOR) {
+            if (node.token != null && node.token.tag == Token.Tag.COMMA) {
                 List<ExpNode> out = new ArrayList<>();
                 parseArguments(argument, out, call);
                 nodes.add(new ExpNode(out));

@@ -31,12 +31,14 @@ public class Token {
     }
 
     public enum Tag {
-        VALUE,
-        VARIABLE,
-        OPERATOR,
-        FUNCTION,
-        OPEN,
-        CLOSE,
-        SEPARATOR
+        VALUE, // constant number (value)
+        VARIABLE, // dynamic variable name (string)
+        OPERATOR, // operator (string)
+        FUNCTION, // function name (string)
+
+        // nodes used in Parser but don't appear in parsed nodes tree
+        OPEN, // open bracket
+        CLOSE, // close bracket
+        COMMA
     }
 }
