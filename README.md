@@ -1,4 +1,4 @@
-# RunExp <sub>v1.0</sub>
+# RunExp <sub>v1.1</sub>
 A lightweight runtime math expressions solver/compiler for JVM.
 - does not use any scripting engine
 - uses java reflection
@@ -10,6 +10,17 @@ Future:
 - double precision expressions
 
 Download <a href=https://github.com/MihailRis/runexp/releases/download/v1.0.0/runexp_v1.0.0.jar>built jar library file</a> from GitHub
+
+
+## Dependecies:
+
+RunExp requires one dependency since v1.1
+
+### [ASM](https://asm.ow2.io/)
+**version used:** asm-all-5.2
+
+ASM is used for runtime java-bytecode generation.
+
 ## Usage:
 
 with x:
