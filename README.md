@@ -9,7 +9,7 @@ Future:
 - integer expressions, bitwise operations
 - double precision expressions
 
-Download <a href=https://github.com/MihailRis/runexp/releases/download/v1.0.0/runexp_v1.0.0.jar>built jar library file</a> from GitHub
+Download <a href=https://github.com/MihailRis/runexp/releases/download/v1.1.0/runexp_1.1.jar>built jar library file</a> from GitHub
 
 
 ## Dependecies:
